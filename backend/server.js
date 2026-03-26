@@ -21,37 +21,15 @@ const app = express();
 const PORT = config.port;
 
 // Middleware
-// Enhanced CORS configuration for development and production
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    
-    // Allowed origins
-    const allowedOrigins = [
-      'http://localhost:5173',  // Vite dev server
-      'http://localhost:3000',  // React dev server
-      'http://localhost:4173',  // Vite preview
-      'https://agridoctor.vercel.app', // Your Vercel frontend
-      'https://agroai.vercel.app', // Alternative Vercel frontend
-      'https://agroai.onrender.com', // Alternative production
-      // Add more frontend URLs as needed
-    ];
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+// Temporary fix: Allow all origins for debugging
+app.use(cors({
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200
-};
+}));
 
-app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -149,7 +127,7 @@ if (config.nodeEnv === 'production') {
   const keepAlive = () => {
     const https = require('https');
     const options = {
-      host: 'agroai-backend.onrender.com',
+      host: 'agroai-o0vm.onrender.com', // Updated with correct backend URL
       path: '/api/health',
       method: 'GET'
     };
