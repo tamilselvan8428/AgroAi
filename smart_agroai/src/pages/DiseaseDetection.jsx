@@ -154,53 +154,75 @@ const DiseaseDetection = () => {
         // Force video to load
         videoRef.current.load();
         
-        // Wait for the video to load metadata
-        videoRef.current.onloadedmetadata = () => {
-          console.log('Video metadata loaded:', {
-            videoWidth: videoRef.current.videoWidth,
-            videoHeight: videoRef.current.videoHeight,
-            readyState: videoRef.current.readyState
-          });
-          
-          // Try to play the video
-          const playPromise = videoRef.current.play();
-          
-          if (playPromise !== undefined) {
-            playPromise.then(() => {
-              console.log('Video started playing successfully');
-              setVideoLoading(false);
-            }).catch(err => {
-              console.error('Video play error:', err);
-              // Try autoplay with user interaction
-              setVideoLoading(false);
-              setError('Tap the video to start camera');
+        // Small delay to ensure stream is bound
+        setTimeout(() => {
+          // Wait for video to load metadata
+          videoRef.current.onloadedmetadata = () => {
+            console.log('Video metadata loaded:', {
+              videoWidth: videoRef.current.videoWidth,
+              videoHeight: videoRef.current.videoHeight,
+              readyState: videoRef.current.readyState
             });
-          }
-        };
+            
+            // Set video dimensions explicitly
+            if (videoRef.current.videoWidth > 0 && videoRef.current.videoHeight > 0) {
+              videoRef.current.style.width = '100%';
+              videoRef.current.style.height = '100%';
+            }
+            
+            // Try to play video
+            const playPromise = videoRef.current.play();
+            
+            if (playPromise !== undefined) {
+              playPromise.then(() => {
+                console.log('Video started playing successfully');
+                setVideoLoading(false);
+              }).catch(err => {
+                console.error('Video play error:', err);
+                // Try autoplay with user interaction
+                setVideoLoading(false);
+                setError('Tap video to start camera');
+              });
+            }
+          };
 
-        // Handle video errors
-        videoRef.current.onerror = (err) => {
-          console.error('Video error:', err);
-          setError('Camera stream error. Please try again.');
-          setVideoLoading(false);
-        };
+          // Handle video errors
+          videoRef.current.onerror = (err) => {
+            console.error('Video error:', err);
+            setError('Camera stream error. Please try again.');
+            setVideoLoading(false);
+          };
 
-        // Handle video canplay
-        videoRef.current.oncanplay = () => {
-          console.log('Video can play');
-          setVideoLoading(false);
-        };
+          // Handle video canplay
+          videoRef.current.oncanplay = () => {
+            console.log('Video can play');
+            setVideoLoading(false);
+          };
 
-        // Add click handler for autoplay issues
-        videoRef.current.onclick = () => {
-          if (videoRef.current.paused) {
-            videoRef.current.play().then(() => {
-              setVideoLoading(false);
-            }).catch(err => {
-              console.error('Play on click failed:', err);
-            });
-          }
-        };
+          // Handle video playing
+          videoRef.current.onplaying = () => {
+            console.log('Video is playing');
+            setVideoLoading(false);
+          };
+
+          // Add click handler for autoplay issues
+          videoRef.current.onclick = () => {
+            if (videoRef.current.paused) {
+              videoRef.current.play().then(() => {
+                setVideoLoading(false);
+              }).catch(err => {
+                console.error('Play on click failed:', err);
+              });
+            }
+          };
+
+          // Force a repaint after a short delay
+          setTimeout(() => {
+            if (videoRef.current) {
+              videoRef.current.style.opacity = '1';
+            }
+          }, 500);
+        }, 100);
       }
     } catch (err) {
       console.error('Camera access error:', err);
