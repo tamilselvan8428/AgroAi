@@ -17,7 +17,6 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    console.log("🔐 Login: Starting authentication...");
     
     try {
       // Add timeout to prevent hanging
@@ -25,35 +24,23 @@ const LoginPage = () => {
         setTimeout(() => reject(new Error('Login request timeout - backend may be sleeping')), 30000);
       });
       
-      console.log("🌐 Login: Sending request to backend...");
       const res = await Promise.race([
         api.post("/api/auth/login", { email, password }),
         timeoutPromise
       ]);
       
-      console.log("✅ Login: Authentication successful");
-      console.log("   User:", res.data.user);
-      console.log("   Token received:", !!res.data.token);
-      
       login(res.data.token, res.data.user);
       navigate("/app/dashboard");
     } catch (err) {
-      console.error("❌ Login: Authentication failed");
-      console.error("   Error:", err.message);
-      
       if (err.message === 'Login request timeout - backend may be sleeping') {
         setError("Login timeout - backend is waking up. Please try again in 30 seconds.");
-        console.error("⏰ Login timed out - backend is sleeping");
       } else if (err.code === 'ERR_NETWORK') {
         setError("Cannot connect to server. Please check your internet connection.");
-        console.error("🚨 Network error - backend not reachable");
       } else {
         setError(err.response?.data?.message || "Login failed. Please check your credentials.");
-        console.error("   Server response:", err.response?.data);
       }
     } finally {
       setLoading(false);
-      console.log("🏁 Login: Process completed");
     }
   };
 
