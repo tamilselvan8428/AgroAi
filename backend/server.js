@@ -32,9 +32,10 @@ const corsOptions = {
       'http://localhost:5173',  // Vite dev server
       'http://localhost:3000',  // React dev server
       'http://localhost:4173',  // Vite preview
-      'https://agroai.vercel.app', // Production frontend
+      'https://agridoctor.vercel.app', // Your Vercel frontend
+      'https://agroai.vercel.app', // Alternative Vercel frontend
       'https://agroai.onrender.com', // Alternative production
-      // Add your Vercel frontend URL when deployed
+      // Add more frontend URLs as needed
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {

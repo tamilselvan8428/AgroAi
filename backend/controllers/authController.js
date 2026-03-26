@@ -12,19 +12,31 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 // Mock Users for demonstration if DB is not connected
-const mockUsers = [];
+const mockUsers = [
+  {
+    email: "test@agroai.com",
+    password: "test123",
+    name: "Test User",
+    _id: "mock-user-1"
+  }
+];
 
 export const signup = async (req, res) => {
   try {
     const { email, password, name } = req.body;
+    console.log("🔐 Signup attempt:", { email, name });
 
     if (!config.mongodbUri) {
+      console.log("📝 Using mock authentication mode");
       // Mock Signup
       const existing = mockUsers.find(u => u.email === email);
-      if (existing) return res.status(400).json({ message: "User already exists (Mock)" });
-      const newUser = { email, password, name, _id: Date.now().toString() };
+      if (existing) return res.status(400).json({ message: "User already exists (Mock Mode)" });
+      
+      const newUser = { email, password, name, _id: "mock-" + Date.now() };
       mockUsers.push(newUser);
       const token = "mock-token-" + newUser._id;
+      
+      console.log("✅ Mock signup successful:", { email, name });
       return res.status(201).json({ token, user: { email, name } });
     }
 
@@ -43,15 +55,70 @@ export const signup = async (req, res) => {
   }
 };
 
+export const testAuth = async (req, res) => {
+  try {
+    console.log("🧪 Testing authentication system...");
+    
+    const testResults = {
+      mongodb: {
+        configured: !!config.mongodbUri,
+        connected: false
+      },
+      jwt: {
+        configured: !!config.jwtSecret,
+        secretPreview: config.jwtSecret ? "configured" : "using fallback"
+      },
+      mockMode: {
+        enabled: !config.mongodbUri,
+        userCount: mockUsers.length,
+        users: mockUsers.map(u => ({ email: u.email, name: u.name }))
+      }
+    };
+    
+    // Test MongoDB connection if configured
+    if (config.mongodbUri) {
+      try {
+        await mongoose.connection.db.admin().ping();
+        testResults.mongodb.connected = true;
+      } catch (error) {
+        testResults.mongodb.error = error.message;
+      }
+    }
+    
+    console.log("✅ Auth test results:", testResults);
+    res.json({
+      success: true,
+      message: "Authentication system test completed",
+      ...testResults
+    });
+  } catch (error) {
+    console.error("❌ Auth test error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Auth test failed",
+      error: error.message
+    });
+  }
+};
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("🔐 Login attempt:", { email });
 
     if (!config.mongodbUri) {
+      console.log("📝 Using mock authentication mode");
+      console.log("📋 Available mock users:", mockUsers.map(u => ({ email: u.email, name: u.name })));
+      
       // Mock Login
       const user = mockUsers.find(u => u.email === email && u.password === password);
-      if (!user) return res.status(400).json({ message: "Invalid credentials (Mock Mode)" });
+      if (!user) {
+        console.log("❌ Mock login failed - invalid credentials");
+        return res.status(400).json({ message: "Invalid credentials. Use test@agroai.com / test123 for demo" });
+      }
+      
       const token = "mock-token-" + user._id;
+      console.log("✅ Mock login successful:", { email: user.email, name: user.name });
       return res.json({ token, user: { email: user.email, name: user.name } });
     }
 
