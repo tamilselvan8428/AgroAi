@@ -65,40 +65,73 @@ const DiseaseDetection = () => {
         throw new Error('Camera API not supported in this browser');
       }
 
-      // Try to get camera permissions first
-      const permissions = await navigator.permissions.query({ name: 'camera' });
-      console.log('Camera permission state:', permissions.state);
+      console.log('Starting camera initialization...');
+      
+      // Check if we're on HTTPS (required for camera)
+      if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+        console.warn('Camera requires HTTPS in production');
+      }
 
-      // Start with basic constraints, then try advanced ones
+      // Reset states
+      setVideoLoading(true);
+      
+      // Try to get camera permissions first
+      try {
+        const permissions = await navigator.permissions.query({ name: 'camera' });
+        console.log('Camera permission state:', permissions.state);
+      } catch (err) {
+        console.log('Permissions API not available, continuing...');
+      }
+
+      // Start with basic constraints first, then try advanced ones
       let stream = null;
       const constraints = [
-        // Try back camera first (mobile)
+        // Basic fallback first (most compatible)
+        { 
+          video: true,
+          audio: false 
+        },
+        // Try with reasonable resolution
+        {
+          video: {
+            width: { ideal: 1280, max: 1920 },
+            height: { ideal: 720, max: 1080 }
+          },
+          audio: false
+        },
+        // Try back camera (mobile)
         {
           video: {
             facingMode: 'environment',
-            width: { ideal: 1920, max: 1920 },
-            height: { ideal: 1080, max: 1080 }
-          }
-        },
-        // Fallback to any camera
-        {
-          video: {
             width: { ideal: 1280 },
             height: { ideal: 720 }
-          }
-        },
-        // Basic fallback
-        { video: true }
+          },
+          audio: false
+        }
       ];
 
-      for (const constraint of constraints) {
+      for (let i = 0; i < constraints.length; i++) {
+        const constraint = constraints[i];
         try {
-          console.log('Trying camera constraint:', constraint);
+          console.log(`Trying camera constraint ${i + 1}:`, constraint);
           stream = await navigator.mediaDevices.getUserMedia(constraint);
-          console.log('Camera access successful with constraint:', constraint);
+          console.log(`Camera access successful with constraint ${i + 1}`);
+          
+          // Log stream details
+          const videoTracks = stream.getVideoTracks();
+          if (videoTracks.length > 0) {
+            const track = videoTracks[0];
+            console.log('Video track details:', {
+              label: track.label,
+              enabled: track.enabled,
+              muted: track.muted,
+              readyState: track.readyState,
+              settings: track.getSettings()
+            });
+          }
           break;
         } catch (err) {
-          console.log('Constraint failed:', constraint, err.message);
+          console.log(`Constraint ${i + 1} failed:`, err.message, err.name);
           continue;
         }
       }
@@ -109,25 +142,40 @@ const DiseaseDetection = () => {
       
       setCameraStream(stream);
       setShowCamera(true);
-      setVideoLoading(true); // Reset loading state
       
       // Wait for video to be ready
       if (videoRef.current) {
+        // Clear any existing srcObject
+        videoRef.current.srcObject = null;
+        
+        // Set new stream
         videoRef.current.srcObject = stream;
+        
+        // Force video to load
+        videoRef.current.load();
         
         // Wait for the video to load metadata
         videoRef.current.onloadedmetadata = () => {
           console.log('Video metadata loaded:', {
             videoWidth: videoRef.current.videoWidth,
-            videoHeight: videoRef.current.videoHeight
+            videoHeight: videoRef.current.videoHeight,
+            readyState: videoRef.current.readyState
           });
-          // Start playing the video
-          videoRef.current.play().then(() => {
-            setVideoLoading(false); // Hide loading indicator when playing
-          }).catch(err => {
-            console.error('Video play error:', err);
-            setVideoLoading(false);
-          });
+          
+          // Try to play the video
+          const playPromise = videoRef.current.play();
+          
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              console.log('Video started playing successfully');
+              setVideoLoading(false);
+            }).catch(err => {
+              console.error('Video play error:', err);
+              // Try autoplay with user interaction
+              setVideoLoading(false);
+              setError('Tap the video to start camera');
+            });
+          }
         };
 
         // Handle video errors
@@ -136,9 +184,27 @@ const DiseaseDetection = () => {
           setError('Camera stream error. Please try again.');
           setVideoLoading(false);
         };
+
+        // Handle video canplay
+        videoRef.current.oncanplay = () => {
+          console.log('Video can play');
+          setVideoLoading(false);
+        };
+
+        // Add click handler for autoplay issues
+        videoRef.current.onclick = () => {
+          if (videoRef.current.paused) {
+            videoRef.current.play().then(() => {
+              setVideoLoading(false);
+            }).catch(err => {
+              console.error('Play on click failed:', err);
+            });
+          }
+        };
       }
     } catch (err) {
       console.error('Camera access error:', err);
+      setVideoLoading(false);
       
       // Provide specific error messages
       let errorMessage = 'Unable to access camera. ';
@@ -329,7 +395,7 @@ const DiseaseDetection = () => {
                   autoPlay
                   playsInline
                   muted
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover cursor-pointer"
                   style={{ transform: 'scaleX(-1)' }}
                 />
                 
@@ -340,6 +406,16 @@ const DiseaseDetection = () => {
                       <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
                       <p className="text-sm">Initializing camera...</p>
                     </div>
+                  </div>
+                )}
+                
+                {/* Camera status indicator */}
+                <div className="absolute top-4 left-4 bg-red-500 w-3 h-3 rounded-full animate-pulse"></div>
+                
+                {/* Instructions overlay */}
+                {!videoLoading && (
+                  <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs">
+                    Tap video if needed
                   </div>
                 )}
                 
