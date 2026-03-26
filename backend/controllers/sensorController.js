@@ -3,11 +3,17 @@ import { config } from "../config/index.js";
 
 export const getLatestSensors = async (req, res) => {
   try {
+    console.log("🔍 Fetching latest sensor data from ThingSpeak...");
+    
     // Get latest data point
     const feeds = await fetchFromThingSpeak(`channels/${config.thingspeak.channelId}/feeds.json`, { results: 1 });
     
+    console.log("📊 Raw ThingSpeak response:", JSON.stringify(feeds, null, 2));
+    
     if (feeds.feeds && feeds.feeds.length > 0) {
       const latestFeed = feeds.feeds[feeds.feeds.length - 1];
+      
+      console.log("📋 Latest feed data:", latestFeed);
       
       // Check if device is online (last update within 2 minutes)
       const lastUpdateTime = new Date(latestFeed.created_at);
@@ -20,10 +26,11 @@ export const getLatestSensors = async (req, res) => {
                         latestFeed.field2 !== null &&
                         latestFeed.created_at !== null;
       
+      // Parse numeric values properly - ALWAYS return the data regardless of online status
       const sensorData = {
-        temperature: latestFeed.field1 || null,        // Changed from field2 to field1 (soil temperature)
-        soilMoisture: latestFeed.field2 || null,      // Changed from field1 to field2 (soil moisture)
-        humidity: latestFeed.field4 || null,
+        temperature: parseFloat(latestFeed.field1) || null,        // field1 = temperature
+        soilMoisture: parseFloat(latestFeed.field2) || null,      // field2 = soil moisture
+        humidity: parseFloat(latestFeed.field4) || null,
         motorStatus: latestFeed.field3 || null,
         timestamp: latestFeed.created_at,
         entryId: latestFeed.entry_id,
@@ -35,29 +42,32 @@ export const getLatestSensors = async (req, res) => {
         }
       };
       
-      console.log("Latest sensor data:", sensorData);
+      console.log("✅ Processed sensor data:", sensorData);
       
+      // Always return success with data, even if device is offline
       res.json({ 
         success: true,
         data: sensorData,
-        timestamp: new Date()
+        timestamp: new Date(),
+        message: isOnline ? "Device online and data current" : `Device offline, showing last data from ${Math.round(timeDiff)} minutes ago`
       });
     } else {
+      console.log("❌ No feeds found in ThingSpeak response");
       res.json({ 
         success: false,
-        message: "No sensor data available",
+        message: "No sensor data available - ThingSpeak channel has no data",
         data: {
           deviceStatus: {
             online: false,
             lastUpdate: null,
             minutesAgo: null,
-            status: "Offline"
+            status: "No Data"
           }
         }
       });
     }
   } catch (error) {
-    console.error("Failed to fetch latest sensor data:", error);
+    console.error("❌ Failed to fetch latest sensor data:", error);
     res.status(500).json({ 
       success: false,
       message: "Failed to fetch sensor data",

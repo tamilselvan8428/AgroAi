@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://agroai-o0vm.onrender.com";
+const API_BASE_URL = "https://agroai-backend.onrender.com"; // Update with your actual Render URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,

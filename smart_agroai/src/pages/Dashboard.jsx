@@ -50,8 +50,8 @@ const Dashboard = () => {
         const feedArray = [{
           created_at: sensorData.timestamp,
           entry_id: sensorData.entryId,
-          field1: sensorData.soilMoisture,
-          field2: sensorData.temperature,
+          field1: sensorData.temperature,      // ✅ Fixed: field1 = temperature
+          field2: sensorData.soilMoisture,    // ✅ Fixed: field2 = soil moisture
           field3: sensorData.motorStatus,
           field4: sensorData.humidity
         }];
@@ -61,14 +61,21 @@ const Dashboard = () => {
         // Use backend's device status determination
         setDeviceOnline(sensorData.deviceStatus.online);
         setLastDataTime(new Date(sensorData.deviceStatus.lastUpdate));
+        
+        // Show appropriate message based on device status
+        if (sensorData.deviceStatus.online) {
+          setError(null);
+        } else {
+          setError(`Device offline - showing last data from ${sensorData.deviceStatus.minutesAgo} minutes ago`);
+        }
       } else {
         setData([]);
         setDeviceOnline(false);
         setLastDataTime(null);
+        setError(res.data.message || "No sensor data available");
       }
       
       setLastUpdate(new Date());
-      setError(null);
     } catch (err) {
       setError("Failed to fetch sensor data. Please check your connection.");
       setDeviceOnline(false);
@@ -186,12 +193,24 @@ const Dashboard = () => {
           <div className="bg-orange-100 p-2 rounded-full">
             <WifiOff className="w-6 h-6" />
           </div>
-          <div>
+          <div className="flex-1">
             <p className="font-bold">Device Offline</p>
             <p className="text-sm opacity-90">
               {lastDataTime ? `Last data received: ${lastDataTime.toLocaleString()}` : "No data received yet"}
             </p>
+            {error && (
+              <p className="text-xs opacity-75 mt-1">
+                {error}
+              </p>
+            )}
           </div>
+          {data.length > 0 && (
+            <div className="text-right">
+              <p className="text-xs font-bold opacity-75">Last Known Values</p>
+              <p className="text-xs">🌡️ {latest.field1 || '--'}°C</p>
+              <p className="text-xs">💧 {latest.field2 || '--'}%</p>
+            </div>
+          )}
         </motion.div>
       )}
       {parseFloat(latest.field1) < 30 && deviceOnline && (
