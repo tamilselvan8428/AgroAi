@@ -154,6 +154,12 @@ const DiseaseDetection = () => {
         // Force video to load
         videoRef.current.load();
         
+        // Force hide loading after a reasonable time even if events don't fire
+        const loadingTimeout = setTimeout(() => {
+          console.log('Force hiding loading indicator');
+          setVideoLoading(false);
+        }, 3000); // 3 second max wait
+        
         // Small delay to ensure stream is bound
         setTimeout(() => {
           // Wait for video to load metadata
@@ -170,6 +176,9 @@ const DiseaseDetection = () => {
               videoRef.current.style.height = '100%';
             }
             
+            // Clear loading timeout
+            clearTimeout(loadingTimeout);
+            
             // Try to play video
             const playPromise = videoRef.current.play();
             
@@ -183,12 +192,18 @@ const DiseaseDetection = () => {
                 setVideoLoading(false);
                 setError('Tap video to start camera');
               });
+            } else {
+              // Fallback if no play promise
+              setTimeout(() => {
+                setVideoLoading(false);
+              }, 500);
             }
           };
 
           // Handle video errors
           videoRef.current.onerror = (err) => {
             console.error('Video error:', err);
+            clearTimeout(loadingTimeout);
             setError('Camera stream error. Please try again.');
             setVideoLoading(false);
           };
@@ -196,12 +211,14 @@ const DiseaseDetection = () => {
           // Handle video canplay
           videoRef.current.oncanplay = () => {
             console.log('Video can play');
+            clearTimeout(loadingTimeout);
             setVideoLoading(false);
           };
 
           // Handle video playing
           videoRef.current.onplaying = () => {
             console.log('Video is playing');
+            clearTimeout(loadingTimeout);
             setVideoLoading(false);
           };
 
