@@ -13,6 +13,7 @@ const DiseaseDetection = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [cameraStream, setCameraStream] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(true);
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -59,23 +60,103 @@ const DiseaseDetection = () => {
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: 'environment', // Use back camera on mobile
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
+      // First check if mediaDevices is supported
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera API not supported in this browser');
+      }
+
+      // Try to get camera permissions first
+      const permissions = await navigator.permissions.query({ name: 'camera' });
+      console.log('Camera permission state:', permissions.state);
+
+      // Start with basic constraints, then try advanced ones
+      let stream = null;
+      const constraints = [
+        // Try back camera first (mobile)
+        {
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1920, max: 1920 },
+            height: { ideal: 1080, max: 1080 }
+          }
+        },
+        // Fallback to any camera
+        {
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        },
+        // Basic fallback
+        { video: true }
+      ];
+
+      for (const constraint of constraints) {
+        try {
+          console.log('Trying camera constraint:', constraint);
+          stream = await navigator.mediaDevices.getUserMedia(constraint);
+          console.log('Camera access successful with constraint:', constraint);
+          break;
+        } catch (err) {
+          console.log('Constraint failed:', constraint, err.message);
+          continue;
         }
-      });
+      }
+
+      if (!stream) {
+        throw new Error('Unable to access any camera');
+      }
       
       setCameraStream(stream);
       setShowCamera(true);
+      setVideoLoading(true); // Reset loading state
       
+      // Wait for video to be ready
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        
+        // Wait for the video to load metadata
+        videoRef.current.onloadedmetadata = () => {
+          console.log('Video metadata loaded:', {
+            videoWidth: videoRef.current.videoWidth,
+            videoHeight: videoRef.current.videoHeight
+          });
+          // Start playing the video
+          videoRef.current.play().then(() => {
+            setVideoLoading(false); // Hide loading indicator when playing
+          }).catch(err => {
+            console.error('Video play error:', err);
+            setVideoLoading(false);
+          });
+        };
+
+        // Handle video errors
+        videoRef.current.onerror = (err) => {
+          console.error('Video error:', err);
+          setError('Camera stream error. Please try again.');
+          setVideoLoading(false);
+        };
       }
     } catch (err) {
       console.error('Camera access error:', err);
-      setError('Unable to access camera. Please check permissions and try again.');
+      
+      // Provide specific error messages
+      let errorMessage = 'Unable to access camera. ';
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        errorMessage += 'Please grant camera permission and refresh the page.';
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        errorMessage += 'No camera found on this device.';
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        errorMessage += 'Camera is already in use by another application.';
+      } else if (err.name === 'OverconstrainedError' || err.name === 'ConstraintNotSatisfiedError') {
+        errorMessage += 'Camera does not support the required settings.';
+      } else if (err.message.includes('Camera API not supported')) {
+        errorMessage += 'Camera is not supported in this browser. Please use Chrome, Firefox, or Safari.';
+      } else {
+        errorMessage += 'Please check camera permissions and try again.';
+      }
+      
+      setError(errorMessage);
     }
   };
 
@@ -85,6 +166,7 @@ const DiseaseDetection = () => {
       setCameraStream(null);
     }
     setShowCamera(false);
+    setVideoLoading(true);
   };
 
   const capturePhoto = () => {
@@ -246,8 +328,21 @@ const DiseaseDetection = () => {
                   ref={videoRef}
                   autoPlay
                   playsInline
+                  muted
                   className="w-full h-full object-cover"
+                  style={{ transform: 'scaleX(-1)' }}
                 />
+                
+                {/* Loading indicator */}
+                {videoLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <div className="text-white text-center">
+                      <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
+                      <p className="text-sm">Initializing camera...</p>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
                   <button
                     onClick={capturePhoto}
