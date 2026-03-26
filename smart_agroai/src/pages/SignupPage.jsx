@@ -18,14 +18,43 @@ const SignupPage = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    console.log("🔐 Signup: Starting registration...");
+    
     try {
-      const res = await api.post("/api/auth/signup", { name, email, password });
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Signup request timeout - backend may be sleeping')), 30000);
+      });
+      
+      console.log("🌐 Signup: Sending request to backend...");
+      const res = await Promise.race([
+        api.post("/api/auth/signup", { name, email, password }),
+        timeoutPromise
+      ]);
+      
+      console.log("✅ Signup: Registration successful");
+      console.log("   User:", res.data.user);
+      console.log("   Token received:", !!res.data.token);
+      
       login(res.data.token, res.data.user);
       navigate("/app/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Signup failed. Please try again.");
+      console.error("❌ Signup: Registration failed");
+      console.error("   Error:", err.message);
+      
+      if (err.message === 'Signup request timeout - backend may be sleeping') {
+        setError("Signup timeout - backend is waking up. Please try again in 30 seconds.");
+        console.error("⏰ Signup timed out - backend is sleeping");
+      } else if (err.code === 'ERR_NETWORK') {
+        setError("Cannot connect to server. Please check your internet connection.");
+        console.error("🚨 Network error - backend not reachable");
+      } else {
+        setError(err.response?.data?.message || "Signup failed. Please try again.");
+        console.error("   Server response:", err.response?.data);
+      }
     } finally {
       setLoading(false);
+      console.log("🏁 Signup: Process completed");
     }
   };
 

@@ -37,14 +37,102 @@ const Dashboard = () => {
   const [deviceOnline, setDeviceOnline] = useState(false);
   const [lastDataTime, setLastDataTime] = useState(null);
 
+  // Test API connection function
+  const testAPIConnection = async () => {
+    console.log("🧪 Testing API Connection...");
+    try {
+      const apiBaseUrl = process.env.REACT_APP_API_URL || "https://agroai-backend.onrender.com";
+      console.log("🌐 Testing base URL:", apiBaseUrl);
+      
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 30000); // 30 second timeout for Render wake-up
+      });
+      
+      // Test if backend is reachable
+      const healthCheck = await Promise.race([
+        fetch(`${apiBaseUrl}/`),
+        timeoutPromise
+      ]);
+      console.log("✅ Backend reachable, status:", healthCheck.status);
+      
+      // Test debug endpoint
+      const debugRes = await Promise.race([
+        api.get("/api/sensors/debug"),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Debug endpoint timeout')), 30000))
+      ]);
+      console.log("🔍 Debug Endpoint Response:", debugRes.data);
+      
+      // Test latest endpoint
+      const latestRes = await Promise.race([
+        api.get("/api/sensors/latest"),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Latest endpoint timeout')), 30000))
+      ]);
+      console.log("📊 Latest Endpoint Response:", latestRes.data);
+      
+    } catch (error) {
+      console.error("❌ API Test Failed:");
+      console.error("   Error Message:", error.message);
+      console.error("   Network Error:", error.code === 'ERR_NETWORK' ? 'Cannot reach backend' : 'Other error');
+      console.error("   Full Error:", error);
+      
+      if (error.message === 'Request timeout' || error.message === 'API request timeout') {
+        console.error("⏰ REQUEST TIMED OUT!");
+        console.error("   This usually means:");
+        console.error("   1. Backend is sleeping (Render free tier)");
+        console.error("   2. Backend is overloaded");
+        console.error("   3. Network connectivity issues");
+      } else if (error.code === 'ERR_NETWORK') {
+        console.error("🚨 BACKEND IS NOT REACHABLE!");
+        console.error("   Check if:", [
+          "1. Backend is deployed and running",
+          "2. API URL is correct",
+          "3. No CORS issues",
+          "4. Backend is not sleeping (Render free tier)"
+        ]);
+      }
+    }
+  };
+
   const fetchData = async () => {
     setLoading(true);
+    console.log("🔄 Dashboard: Starting data fetch...");
+    
     try {
+      // First test API connection
+      const apiBaseUrl = process.env.REACT_APP_API_URL || "https://agroai-backend.onrender.com";
+      console.log("🌐 Testing API connection to:", apiBaseUrl);
+      console.log("🌐 Full API URL:", `${apiBaseUrl}/api/sensors/latest`);
+      
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('API request timeout')), 30000); // 30 second timeout for Render wake-up
+      });
+      
       // Use backend API instead of direct ThingSpeak call
-      const res = await api.get("/api/sensors/latest");
+      const res = await Promise.race([
+        api.get("/api/sensors/latest"),
+        timeoutPromise
+      ]);
+      
+      console.log("📥 Dashboard: API Response received:");
+      console.log("   HTTP Status:", res.status);
+      console.log("   Response Headers:", res.headers);
+      console.log("   Success:", res.data.success);
+      console.log("   Message:", res.data.message);
+      console.log("   Full Response:", res.data);
       
       if (res.data.success && res.data.data) {
         const sensorData = res.data.data;
+        
+        console.log("📊 Dashboard: Sensor Data Processing:");
+        console.log("   Temperature:", sensorData.temperature, "°C");
+        console.log("   Soil Moisture:", sensorData.soilMoisture, "%");
+        console.log("   Humidity:", sensorData.humidity, "%");
+        console.log("   Motor Status:", sensorData.motorStatus);
+        console.log("   Device Online:", sensorData.deviceStatus.online);
+        console.log("   Last Update:", sensorData.deviceStatus.lastUpdate);
+        console.log("   Minutes Ago:", sensorData.deviceStatus.minutesAgo);
         
         // Create a single-item array for chart compatibility
         const feedArray = [{
@@ -56,6 +144,8 @@ const Dashboard = () => {
           field4: sensorData.humidity
         }];
         
+        console.log("📋 Dashboard: Chart Data Array:", feedArray);
+        
         setData(feedArray);
         
         // Use backend's device status determination
@@ -64,11 +154,18 @@ const Dashboard = () => {
         
         // Show appropriate message based on device status
         if (sensorData.deviceStatus.online) {
+          console.log("✅ Dashboard: Device is ONLINE - Real-time data");
           setError(null);
         } else {
+          console.log("⚠️ Dashboard: Device is OFFLINE - Showing cached data");
           setError(`Device offline - showing last data from ${sensorData.deviceStatus.minutesAgo} minutes ago`);
         }
       } else {
+        console.log("❌ Dashboard: No sensor data available");
+        console.log("   API Success:", res.data.success);
+        console.log("   Has Data Object:", !!res.data.data);
+        console.log("   Full Data:", res.data);
+        console.log("   Error Message:", res.data.message);
         setData([]);
         setDeviceOnline(false);
         setLastDataTime(null);
@@ -77,11 +174,19 @@ const Dashboard = () => {
       
       setLastUpdate(new Date());
     } catch (err) {
+      console.error("💥 Dashboard: API Error occurred:");
+      console.error("   Error Message:", err.message);
+      console.error("   Error Code:", err.code);
+      console.error("   HTTP Status:", err.response?.status);
+      console.error("   Error Response:", err.response?.data);
+      console.error("   Full Error:", err);
       setError("Failed to fetch sensor data. Please check your connection.");
       setDeviceOnline(false);
       setLastDataTime(null);
     } finally {
       setLoading(false);
+      console.log("🏁 Dashboard: Data fetch completed");
+      console.log("🏁 Final Data Array Length:", data.length);
     }
   };
 
@@ -93,6 +198,15 @@ const Dashboard = () => {
 
   const latest = data[data.length - 1] || {};
   const motorOn = latest.field3 === "1";
+
+  // Log what's being displayed in the UI
+  console.log("🎨 Dashboard: UI Display Values:");
+  console.log("   Latest Data Object:", latest);
+  console.log("   Display Temperature:", latest.field1, "°C");
+  console.log("   Display Soil Moisture:", latest.field2, "%");
+  console.log("   Display Humidity:", latest.field4, "%");
+  console.log("   Display Motor Status:", latest.field3, "(Running:", motorOn, ")");
+  console.log("   Device Online Status:", deviceOnline);
 
   const stats = [
     {
@@ -173,12 +287,21 @@ const Dashboard = () => {
       {/* Debug Info - Remove in production */}
       {process.env.NODE_ENV === 'development' && (
         <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl mb-6">
-          <h3 className="text-sm font-bold text-yellow-800 mb-2">Debug Info</h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-bold text-yellow-800">Debug Info</h3>
+            <button
+              onClick={testAPIConnection}
+              className="px-3 py-1 bg-yellow-600 text-white text-xs rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Test API
+            </button>
+          </div>
           <div className="text-xs text-yellow-700 space-y-1">
             <p><strong>Device Status:</strong> {deviceOnline ? 'Online' : 'Offline'}</p>
             <p><strong>Last Data Time:</strong> {lastDataTime?.toLocaleString() || 'Never'}</p>
             <p><strong>API Response:</strong> {lastUpdate?.toLocaleString() || 'Never'}</p>
             <p><strong>Data Points:</strong> {data.length}</p>
+            <p><strong>API Base URL:</strong> {process.env.REACT_APP_API_URL || "https://agroai-backend.onrender.com"}</p>
           </div>
         </div>
       )}
