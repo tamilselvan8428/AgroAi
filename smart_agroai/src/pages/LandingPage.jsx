@@ -90,73 +90,76 @@ const LandingPage = () => {
     <div className="min-h-screen bg-[#fafbfc] font-sans text-slate-900 overflow-x-hidden selection:bg-green-100 selection:text-green-900">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-xl border-b border-slate-200/50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2 group cursor-pointer"
           >
             <div className="bg-green-600 p-1.5 rounded-xl group-hover:rotate-12 transition-transform duration-300">
-              <Sprout className="w-6 h-6 text-white" />
+              <Sprout className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold tracking-tight text-slate-900">Agro<span className="text-green-600">Ai</span></span>
+            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Agro<span className="text-green-600">Ai</span></span>
           </motion.div>
           
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-10"
+            className="flex items-center gap-4 sm:gap-10"
           >
-            <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-sm font-bold text-slate-600 hover:text-green-600 transition-colors uppercase tracking-widest">Features</a>
-              <a href="#technology" className="text-sm font-bold text-slate-600 hover:text-green-600 transition-colors uppercase tracking-widest">Technology</a>
-              <a href="#contact" className="text-sm font-bold text-slate-600 hover:text-green-600 transition-colors uppercase tracking-widest">Contact</a>
+            <div className="hidden md:flex items-center gap-4 sm:gap-6 lg:gap-8">
+              <a href="#features" className="text-xs sm:text-sm font-bold text-slate-600 hover:text-green-600 transition-colors uppercase tracking-widest">Features</a>
+              <a href="#technology" className="text-xs sm:text-sm font-bold text-slate-600 hover:text-green-600 transition-colors uppercase tracking-widest">Technology</a>
+              <a href="#contact" className="text-xs sm:text-sm font-bold text-slate-600 hover:text-green-600 transition-colors uppercase tracking-widest">Contact</a>
             </div>
-            <div className="h-6 w-px bg-slate-200 hidden md:block"></div>
-            <Link to="/login" className="hidden sm:block text-sm font-bold text-slate-600 hover:text-green-600 transition-colors">Login</Link>
-            <Link to="/signup" className="px-6 py-2.5 bg-green-600 text-white rounded-2xl text-sm font-bold shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all hover:scale-105 active:scale-95">Start for Free</Link>
+            <div className="h-4 sm:h-6 w-px bg-slate-200 hidden md:block"></div>
+            <Link to="/login" className="hidden sm:block text-xs sm:text-sm font-bold text-slate-600 hover:text-green-600 transition-colors">Login</Link>
+            <Link to="/signup" className="px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 bg-green-600 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all hover:scale-105 active:scale-95">
+              <span className="hidden sm:inline">Start for Free</span>
+              <span className="sm:hidden">Start</span>
+            </Link>
           </motion.div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-24 pb-20 px-6 relative overflow-visible">
+      <section className="pt-20 sm:pt-24 pb-16 sm:pb-20 px-4 sm:px-6 relative overflow-visible">
         {/* Animated Blobs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-32 left-1/2 w-96 h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-[60px] sm:blur-[100px] opacity-20 animate-blob"></div>
+        <div className="absolute top-0 right-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-[60px] sm:blur-[100px] opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-20 sm:bottom-32 left-1/2 w-48 sm:w-96 h-48 sm:h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-[60px] sm:blur-[100px] opacity-20 animate-blob animation-delay-4000"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="lg:col-span-7 text-left"
+              className="lg:col-span-7 text-center lg:text-left"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-100 text-green-700 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-8 shadow-sm">
-                <span className="relative flex h-2.5 w-2.5">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-green-50 border border-green-100 text-green-700 text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] mb-4 sm:mb-8 shadow-sm">
+                <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                  <span className="relative inline-flex rounded-full h-full w-full bg-green-500"></span>
                 </span>
                 AI-Driven Precision Agriculture
               </div>
 
-              <h1 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900 mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 mb-4 sm:mb-6 leading-tight">
                 Farming the <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-500 to-indigo-500 animate-gradient">Smart Way</span>
               </h1>
               
-              <p className="text-lg md:text-xl text-slate-600 max-w-xl mb-12 leading-relaxed font-medium">
+              <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-12 leading-relaxed font-medium">
                 Unleash the power of IoT and Neural Networks to maximize yield and minimize waste. Real-time monitoring with autonomous decision making.
               </p>
               
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                <Link to="/signup" className="w-full sm:w-auto px-10 py-5 bg-slate-900 text-white rounded-[2rem] text-lg font-bold shadow-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-3 group hover:scale-105 active:scale-95">
-                  Get Started <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6">
+                <Link to="/signup" className="w-full sm:w-auto px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-slate-900 text-white rounded-xl sm:rounded-[2rem] text-sm sm:text-base lg:text-lg font-bold shadow-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 sm:gap-3 group hover:scale-105 active:scale-95">
+                  Get Started <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link to="/login" className="w-full sm:w-auto px-10 py-5 bg-white/70 backdrop-blur-md border border-slate-200 text-slate-900 rounded-[2rem] text-lg font-bold hover:bg-white hover:border-green-600 hover:text-green-600 transition-all hover:scale-105 active:scale-95">
+                <Link to="/login" className="w-full sm:w-auto px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-white/70 backdrop-blur-md border border-slate-200 text-slate-900 rounded-xl sm:rounded-[2rem] text-sm sm:text-base lg:text-lg font-bold hover:bg-white hover:border-green-600 hover:text-green-600 transition-all hover:scale-105 active:scale-95">
                   How it Works
                 </Link>
               </div>
@@ -169,10 +172,10 @@ const LandingPage = () => {
               transition={{ duration: 1, delay: 0.2 }}
               className="lg:col-span-5 relative hidden lg:block"
             >
-              <div className="relative z-10 w-full aspect-square p-4">
+              <div className="relative z-10 w-full aspect-square p-2 sm:p-4">
                 {/* Background decorative circles */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-green-100/40 via-purple-100/40 to-blue-100/40 rounded-full animate-blob"></div>
-                <div className="absolute -inset-10 border-2 border-dashed border-slate-200/50 rounded-full animate-[spin_20s_linear_infinite]"></div>
+                <div className="absolute -inset-5 sm:-inset-10 border-2 border-dashed border-slate-200/50 rounded-full animate-[spin_20s_linear_infinite]"></div>
                 
                 <motion.div
                   animate={{ 
@@ -184,7 +187,7 @@ const LandingPage = () => {
                     repeat: Infinity,
                     ease: "easeInOut" 
                   }}
-                  className="relative z-20 w-full h-full rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(34,197,94,0.3)] border-4 border-white"
+                  className="relative z-20 w-full h-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-[0_30px_60px_-10px_rgba(34,197,94,0.3)] border-4 border-white"
                 >
                   <img 
                     src="https://th.bing.com/th/id/OIP.9qRRR3qkprYMnqw9-ZWmmQHaE8?w=246&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" 
@@ -198,13 +201,13 @@ const LandingPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-green-900/60 via-transparent to-transparent"></div>
                   
                   {/* Floating Elements on Image */}
-                  <div className="absolute top-8 left-8 bg-white/10 backdrop-blur-xl border border-white/20 p-3 rounded-2xl flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
-                      <Zap className="w-6 h-6 text-white" />
+                  <div className="absolute top-4 sm:top-8 left-4 sm:left-8 bg-white/10 backdrop-blur-xl border border-white/20 p-2 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                      <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                     </div>
-                    <div>
+                    <div className="hidden sm:block">
                       <p className="text-white font-bold text-xs">Soil Quality</p>
-                      <p className="text-white/80 text-[10px]">Optimal Range</p>
+                      <p className="text-white/80 text-[8px] sm:text-[10px]">Optimal Range</p>
                     </div>
                   </div>
                 </motion.div>
@@ -213,24 +216,23 @@ const LandingPage = () => {
                 <motion.div 
                    animate={{ y: [0, 15, 0] }}
                    transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-                   className="absolute -top-4 -right-4 w-20 h-20 bg-amber-100/80 backdrop-blur-xl border border-amber-200 rounded-3xl flex items-center justify-center p-4 shadow-xl rotate-12 z-30"
+                   className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-12 h-12 sm:w-20 sm:h-20 bg-amber-100/80 backdrop-blur-xl border border-amber-200 rounded-2xl sm:rounded-3xl flex items-center justify-center p-2 sm:p-4 shadow-xl rotate-12 z-30"
                 >
-                   <Sprout className="w-10 h-10 text-amber-600" />
+                   <Sprout className="w-6 h-6 sm:w-10 sm:h-10 text-amber-600" />
                 </motion.div>
 
                 <motion.div 
                    animate={{ y: [0, -15, 0] }}
                    transition={{ duration: 3, repeat: Infinity }}
-                   className="absolute -bottom-8 -left-8 w-24 h-24 bg-blue-100/80 backdrop-blur-xl border border-blue-200 rounded-3xl flex items-center justify-center p-4 shadow-xl -rotate-12 z-30"
+                   className="absolute -bottom-4 sm:-bottom-8 -left-4 sm:-left-8 w-16 h-16 sm:w-24 sm:h-24 bg-blue-100/80 backdrop-blur-xl border border-blue-200 rounded-2xl sm:rounded-3xl flex items-center justify-center p-2 sm:p-4 shadow-xl -rotate-12 z-30"
                 >
-                   <Droplets className="w-12 h-12 text-blue-600" />
+                   <Droplets className="w-8 h-8 sm:w-12 sm:h-12 text-blue-600" />
                 </motion.div>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
-
 
       {/* Features Section */}
       <section id="features" className="py-20 px-6 bg-[#f8fafc] relative overflow-hidden">
@@ -278,14 +280,14 @@ const LandingPage = () => {
       </section>
 
       {/* Visual Section / Technology Section */}
-      <section id="technology" className="py-20 px-6">
-        <div className="max-w-7xl mx-auto overflow-hidden bg-slate-900 rounded-[2.5rem] p-4 sm:p-10 relative shadow-2xl">
+      <section id="technology" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto overflow-hidden bg-slate-900 rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] p-4 sm:p-6 lg:p-10 relative shadow-2xl">
           <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-green-500/20 via-transparent to-transparent"></div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center relative z-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-black text-white mb-6 leading-tight tracking-tight">Precision Farming <br /> Optimized for You</h2>
-              <div className="space-y-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6 leading-tight tracking-tight">Precision Farming <br /> Optimized for You</h2>
+              <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                 {[
                   { title: "Real-time Metrics", desc: "Live dashboard tracking soil moisture, NPK levels, and solar intensity." },
                   { title: "AI Disease Scanner", desc: "Upload a photo and get instant treatment recommendations." },
@@ -296,20 +298,20 @@ const LandingPage = () => {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="flex items-start gap-4"
+                    className="flex items-start gap-3 sm:gap-4"
                   >
-                    <div className="bg-green-500 p-2 rounded-xl shrink-0 mt-1 shadow-lg shadow-green-500/30">
-                      <CheckCircle2 className="w-6 h-6 text-white" />
+                    <div className="bg-green-500 p-1.5 sm:p-2 rounded-lg sm:rounded-xl shrink-0 mt-1 shadow-lg shadow-green-500/30">
+                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold text-white mb-1">{item.title}</h4>
-                      <p className="text-slate-400 font-medium leading-relaxed">{item.desc}</p>
+                      <h4 className="text-lg sm:text-xl font-bold text-white mb-1">{item.title}</h4>
+                      <p className="text-slate-400 font-medium leading-relaxed text-sm sm:text-base">{item.desc}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
               <motion.div 
-                className="mt-12"
+                className="mt-8 sm:mt-12"
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: 20 }}
               >

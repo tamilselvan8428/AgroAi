@@ -143,22 +143,22 @@ const Dashboard = () => {
   }));
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Farm Overview</h1>
-          <p className="text-slate-500 font-medium mt-1">Real-time monitoring from IoT sensors</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Farm Overview</h1>
+          <p className="text-slate-500 font-medium mt-1 text-sm sm:text-base">Real-time monitoring from IoT sensors</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <div className="text-right">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Last Sync</p>
-            <p className="text-sm font-bold text-slate-600">{lastUpdate?.toLocaleTimeString() || "Never"}</p>
+            <p className="text-xs sm:text-sm font-bold text-slate-600">{lastUpdate?.toLocaleTimeString() || "Never"}</p>
           </div>
           <button 
             onClick={fetchData}
-            className="p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm"
+            className="p-2 sm:p-3 bg-white border border-slate-200 rounded-lg sm:rounded-xl hover:bg-slate-50 transition-colors shadow-sm"
           >
-            <RefreshCw className={cn("w-5 h-5 text-slate-600", loading && "animate-spin")} />
+            <RefreshCw className={cn("w-4 h-4 sm:w-5 sm:h-5 text-slate-600", loading && "animate-spin")} />
           </button>
         </div>
       </div>

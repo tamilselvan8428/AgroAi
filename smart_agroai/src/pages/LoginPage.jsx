@@ -29,21 +29,21 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-sans">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 sm:p-6 font-sans">
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-green-100/40 via-transparent to-transparent -z-10"></div>
       
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-md bg-white rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-100 p-10"
+        className="w-full max-w-md bg-white rounded-[20px] sm:rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-100 p-6 sm:p-8 lg:p-10"
       >
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-50 rounded-2xl mb-6">
-            <Sprout className="w-10 h-10 text-green-600" />
+        <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-green-50 rounded-xl sm:rounded-2xl mb-4 sm:mb-6">
+            <Sprout className="w-6 h-6 sm:w-8 sm:w-10 text-green-600" />
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
-          <p className="text-slate-500 mt-2 font-medium">Log in to manage your smart farm</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
+          <p className="text-slate-500 mt-1 sm:mt-2 font-medium text-sm sm:text-base">Log in to manage your smart farm</p>
         </div>
 
         {error && (
@@ -53,18 +53,18 @@ const LoginPage = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
             <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-green-600 transition-colors" />
+              <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400 group-focus-within:text-green-600 transition-colors" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="farmer@example.com"
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl py-3 sm:py-4 pl-10 sm:pl-12 pr-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium text-sm sm:text-base"
               />
             </div>
           </div>
@@ -72,33 +72,33 @@ const LoginPage = () => {
           <div className="space-y-2">
             <label className="text-sm font-bold text-slate-700 ml-1">Password</label>
             <div className="relative group">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-green-600 transition-colors" />
+              <Lock className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400 group-focus-within:text-green-600 transition-colors" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl py-3 sm:py-4 pl-10 sm:pl-12 pr-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium text-sm sm:text-base"
               />
             </div>
           </div>
 
           <div className="flex items-center justify-between px-1">
             <label className="flex items-center gap-2 cursor-pointer group">
-              <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-green-600 focus:ring-green-500" />
-              <span className="text-sm text-slate-500 group-hover:text-slate-700 transition-colors font-medium">Remember me</span>
+              <input type="checkbox" className="w-3 h-3 sm:w-4 sm:h-4 rounded border-slate-300 text-green-600 focus:ring-green-500" />
+              <span className="text-xs sm:text-sm text-slate-500 group-hover:text-slate-700 transition-colors font-medium">Remember me</span>
             </label>
-            <a href="#" className="text-sm font-bold text-green-600 hover:text-green-700 transition-colors">Forgot Password?</a>
+            <a href="#" className="text-xs sm:text-sm font-bold text-green-600 hover:text-green-700 transition-colors">Forgot Password?</a>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-slate-900 text-white rounded-2xl py-4 font-bold text-lg shadow-xl hover:bg-slate-800 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70"
+            className="w-full bg-slate-900 text-white rounded-xl sm:rounded-2xl py-3 sm:py-4 font-bold text-base sm:text-lg shadow-xl hover:bg-slate-800 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70"
           >
-            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Log In"}
-            {!loading && <ArrowRight className="w-5 h-5" />}
+            {loading ? <Loader2 className="w-4 h-4 sm:w-6 sm:h-6 animate-spin" /> : "Log In"}
+            {!loading && <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
           </button>
         </form>
 
