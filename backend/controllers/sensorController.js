@@ -15,13 +15,13 @@ export const getLatestSensors = async (req, res) => {
       
       console.log("📋 Latest feed data:", latestFeed);
       
-      // Check if device is online (last update within 2 minutes)
+      // Check if device is online (last update within 10 minutes)
       const lastUpdateTime = new Date(latestFeed.created_at);
       const now = new Date();
       const timeDiff = (now - lastUpdateTime) / (1000 * 60); // minutes
       
-      // More strict online detection
-      const isOnline = timeDiff <= 2 && // Reduced from 5 to 2 minutes
+      // More lenient online detection - show data if it's less than 30 minutes old
+      const isOnline = timeDiff <= 30 && // Increased from 2 to 30 minutes
                         latestFeed.field1 !== null && // Check if fields have actual data
                         latestFeed.field2 !== null &&
                         latestFeed.created_at !== null;
@@ -38,7 +38,7 @@ export const getLatestSensors = async (req, res) => {
           online: isOnline,
           lastUpdate: latestFeed.created_at,
           minutesAgo: Math.round(timeDiff),
-          status: isOnline ? "Online" : "Offline"
+          status: isOnline ? "Online" : `Offline (${Math.round(timeDiff)} minutes ago)`
         }
       };
       

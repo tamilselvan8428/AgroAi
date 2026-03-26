@@ -3,13 +3,15 @@ import { config } from "../config/index.js";
 
 export const fetchFromThingSpeak = async (endpoint, params = {}) => {
   try {
+    console.log("🌐 Fetching from ThingSpeak:", endpoint, params);
     const response = await axios.get(`https://api.thingspeak.com/${endpoint}`, {
       params: {
         api_key: config.thingspeak.readApiKey,
         ...params
       },
-      timeout: 5000 // 5 second timeout
+      timeout: 10000 // Increased from 5 to 10 seconds
     });
+    console.log("✅ ThingSpeak response received");
     return response.data;
   } catch (error) {
     console.error("ThingSpeak API error:", error.message);
