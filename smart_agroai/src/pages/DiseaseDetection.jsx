@@ -296,11 +296,15 @@ const DiseaseDetection = () => {
           setSelectedImage(file);
           setResult(null);
           setError(null);
+          stopCamera();
+          
+          // Automatically start disease detection after capture
+          setTimeout(() => {
+            detectDisease();
+          }, 500);
         };
         reader.readAsDataURL(file);
       }, 'image/jpeg', 0.9);
-      
-      stopCamera();
     }
   };
 
@@ -473,10 +477,10 @@ const DiseaseDetection = () => {
                   </button>
                 </div>
               </div>
-              <p className="text-slate-500 text-sm text-center">Position the leaf in frame and tap to capture</p>
+              <p className="text-slate-500 text-sm text-center">Position the leaf in frame and tap to analyze instantly</p>
             </div>
           ) : (
-            /* Image Preview */
+            /* Image Preview with Auto-Detection */
             <div className="w-full h-full flex flex-col items-center space-y-4">
               <div className="relative w-full aspect-video rounded-[32px] overflow-hidden shadow-2xl">
                 <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
@@ -486,15 +490,28 @@ const DiseaseDetection = () => {
                 >
                   <X className="w-5 h-5" />
                 </button>
+                
+                {/* Auto-detection indicator */}
+                {loading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <div className="text-white text-center">
+                      <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
+                      <p className="text-sm">Analyzing leaf health...</p>
+                    </div>
+                  </div>
+                )}
               </div>
-              <button
-                onClick={detectDisease}
-                disabled={loading}
-                className="w-full py-4 lg:py-5 bg-slate-900 text-white rounded-2xl font-bold text-lg shadow-xl hover:bg-slate-800 transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-70"
-              >
-                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Bug className="w-6 h-6" />}
-                {loading ? "Analyzing Image..." : "Analyze Health"}
-              </button>
+              
+              {!loading && (
+                <button
+                  onClick={detectDisease}
+                  disabled={loading}
+                  className="w-full py-4 lg:py-5 bg-slate-900 text-white rounded-2xl font-bold text-lg shadow-xl hover:bg-slate-800 transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-70"
+                >
+                  {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Bug className="w-6 h-6" />}
+                  {loading ? "Analyzing Image..." : "Analyze Health"}
+                </button>
+              )}
             </div>
           )}
           
