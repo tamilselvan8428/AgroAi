@@ -50,7 +50,7 @@ const MotorControl = () => {
       // Check if it's a network error (backend not running)
       if (err.code === 'ERR_NETWORK' || err.message.includes('Failed to fetch')) {
         setError("Backend server not running. Please start the backend server.");
-        console.error("Backend server connection failed. Make sure backend is running on localhost:3000");
+        console.error("Backend server connection failed. Make sure backend is running on https://agroai-o0vm.onrender.com");
       } else if (err.response?.status === 401) {
         setError("Authentication failed. Please log in again.");
         console.error("Authentication error:", err.response.data);
@@ -100,7 +100,7 @@ const MotorControl = () => {
       // Check if it's a network error (backend not running)
       if (err.code === 'ERR_NETWORK' || err.message.includes('Failed to fetch')) {
         setError("Backend server not running. Please start the backend server.");
-        console.error("Backend server connection failed. Make sure backend is running on localhost:3000");
+        console.error("Backend server connection failed. Make sure backend is running on https://agroai-o0vm.onrender.com");
       } else if (err.response?.status === 429) {
         setError(`Rate limit exceeded. ${err.response.data.message || 'Please wait before trying again.'}`);
         console.error("Rate limit error:", err.response.data);
