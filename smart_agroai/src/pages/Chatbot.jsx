@@ -594,7 +594,7 @@ const speakText = (text) => {
   };
 
   return (
-    <div className="h-[calc(100vh-160px)] flex bg-white rounded-[20px] sm:rounded-[30px] lg:rounded-[40px] shadow-sm border border-slate-100 overflow-hidden flex-col lg:flex-row">
+    <div className="h-[calc(100vh-160px)] flex bg-white overflow-hidden flex-col lg:flex-row">
       {/* History Sidebar */}
       <AnimatePresence>
         {showHistory && (
