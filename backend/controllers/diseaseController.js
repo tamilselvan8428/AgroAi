@@ -25,6 +25,22 @@ export const predictDisease = async (req, res) => {
       });
     }
 
+    // Temporary: Return fallback immediately for testing
+    console.log("🔄 Using immediate fallback for testing");
+    const fallbackResult = {
+      success: true,
+      disease: "Sample Analysis",
+      confidence: 75,
+      symptoms: ["Sample symptoms for testing"],
+      treatment: ["Sample treatment for testing"],
+      prevention: ["Sample prevention for testing"],
+      severity: "Medium",
+      fallback: true,
+      note: "Immediate fallback for testing - ML model integration pending"
+    };
+    
+    return res.json(fallbackResult);
+
     console.log("🧠 Sending to ML model:", config.mlModel.url);
     
     try {
