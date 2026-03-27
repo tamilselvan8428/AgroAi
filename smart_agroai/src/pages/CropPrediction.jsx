@@ -158,10 +158,19 @@ const CropPrediction = () => {
   };
 
   const dashboardCards = [
-    { label: "Soil Temp", value: sensorData?.temperature || 25, unit: "°C", color: "text-orange-500", icon: <Thermometer className="w-4 h-4" /> },
-    { label: "Env Temp", value: weatherData?.temperature || 30, unit: "°C", color: "text-red-500", icon: <Thermometer className="w-4 h-4" /> },
-    { label: "Moisture", value: sensorData?.soilMoisture || 50, unit: "%", color: "text-blue-500", icon: <Droplets className="w-4 h-4" /> },
+    { label: "Soil Temperature", value: sensorData?.temperature || 25, unit: "°C", color: "text-orange-500", icon: <Thermometer className="w-4 h-4" /> },
+    { label: "Environment Temp", value: weatherData?.temperature || 30, unit: "°C", color: "text-red-500", icon: <Thermometer className="w-4 h-4" /> },
+    { label: "Soil Moisture", value: sensorData?.soilMoisture || 50, unit: "%", color: "text-blue-500", icon: <Droplets className="w-4 h-4" /> },
   ];
+
+  // Debug logging to track data values
+  console.log("🌡️ Dashboard Data:", {
+    soilTemp: sensorData?.temperature,
+    soilMoisture: sensorData?.soilMoisture,
+    envTemp: weatherData?.temperature,
+    rawSensorData: sensorData,
+    rawWeatherData: weatherData
+  });
 
   return (
     <div className="space-y-6">
