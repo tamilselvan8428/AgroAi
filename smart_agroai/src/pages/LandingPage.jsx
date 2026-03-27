@@ -25,7 +25,7 @@ const LandingPage = () => {
     },
     {
       title: "AI Disease Detection",
-      description: "Identify crop diseases instantly using state-of-the-art computer vision and neural networks.",
+      description: "Identify crop diseases instantly using state-of-the-art computer vision and AI agent.",
       icon: Bug,
       color: "text-rose-500",
       bg: "bg-rose-50/50",
@@ -152,7 +152,7 @@ const LandingPage = () => {
               </h1>
               
               <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-12 leading-relaxed font-medium">
-                Unleash the power of IoT and Neural Networks to maximize yield and minimize waste. Real-time monitoring with autonomous decision making.
+                Unleash the power of IoT and AI Agent to maximize yield and minimize waste. Real-time monitoring with autonomous decision making.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6">
