@@ -97,7 +97,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 30000); // Update every 30s
+    const interval = setInterval(fetchData, 10000); // Update every 10s
     return () => clearInterval(interval);
   }, []);
 
@@ -107,16 +107,16 @@ const Dashboard = () => {
   const stats = [
     {
       label: "Device Status",
-      value: deviceOnline ? "Online" : "Offline",
+      value: deviceOnline ? "Online" : `Offline (${Math.round((new Date() - lastDataTime) / 60000)}m ago)`,
       icon: deviceOnline ? Wifi : WifiOff,
       color: deviceOnline ? "text-green-600" : "text-red-600",
       bg: deviceOnline ? "bg-green-50" : "bg-red-50",
       trend: deviceOnline ? "Connected" : "No Signal",
-      status: deviceOnline ? "Active" : "Inactive",
+      status: deviceOnline ? "Active" : lastDataTime ? `Last: ${lastDataTime.toLocaleTimeString()}` : "Never",
     },
     {
       label: "Soil Moisture",
-      value: `${latest.field1 || 0}%`,
+      value: `${latest.field2 || 0}%`,
       icon: Droplets,
       color: "text-blue-600",
       bg: "bg-blue-50",
@@ -125,22 +125,14 @@ const Dashboard = () => {
     },
     {
       label: "Temperature",
-      value: `${latest.field2 || 0}°C`,
+      value: `${latest.field1 || 0}°C`,
       icon: Thermometer,
       color: "text-orange-600",
       bg: "bg-orange-50",
       trend: "-0.8%",
       status: parseFloat(latest.field2) > 35 ? "High" : "Normal",
     },
-    {
-      label: "Humidity",
-      value: `${latest.field4 || 0}%`,
-      icon: Wind,
-      color: "text-cyan-600",
-      bg: "bg-cyan-50",
-      trend: "+1.2%",
-      status: "Stable",
-    },
+   
     {
       label: "Motor Status",
       value: motorOn ? "Running" : "Standby",

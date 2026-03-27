@@ -10,6 +10,7 @@ const Chatbot = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [sensorData, setSensorData] = useState(null);
+  const [deviceStatus, setDeviceStatus] = useState({ online: false, lastUpdate: null, minutesAgo: 0 });
   const [chatHistory, setChatHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -29,6 +30,10 @@ const Chatbot = () => {
   useEffect(() => {
     loadChatHistory();
     initializeSpeechRecognition();
+    // Start 10-second interval fetching
+    fetchDeviceStatus();
+    const interval = setInterval(fetchDeviceStatus, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -162,17 +167,54 @@ const Chatbot = () => {
 
   const fetchDeviceStatus = async () => {
     try {
-      // Use the dedicated device status endpoint
-      const response = await api.post("/api/device/status");
+      console.log("🔄 Fetching device status from ThingSpeak...");
       
-      if (response.data.sensorData) {
-        setSensorData(response.data.sensorData);
+      // Use the sensors/latest endpoint which returns ThingSpeak data with status
+      const response = await api.get("/api/sensors/latest");
+      
+      if (response.data.success && response.data.data) {
+        const data = response.data.data;
+        setSensorData(data);
+        
+        // Extract device status from the response
+        if (data.deviceStatus) {
+          setDeviceStatus({
+            online: data.deviceStatus.online,
+            lastUpdate: data.deviceStatus.lastUpdate,
+            minutesAgo: data.deviceStatus.minutesAgo,
+            status: data.deviceStatus.status
+          });
+        }
+        
+        console.log("✅ Device status updated:", {
+          online: data.deviceStatus?.online,
+          lastUpdate: data.deviceStatus?.lastUpdate,
+          minutesAgo: data.deviceStatus?.minutesAgo,
+          sensorData: {
+            temperature: data.temperature,
+            moisture: data.soilMoisture,
+            humidity: data.humidity
+          }
+        });
       } else {
+        console.log("❌ No sensor data available");
         setSensorData(null);
+        setDeviceStatus({
+          online: false,
+          lastUpdate: null,
+          minutesAgo: 0,
+          status: "No data available"
+        });
       }
     } catch (err) {
-      console.log("Failed to fetch device status:", err);
+      console.error("❌ Failed to fetch device status:", err);
       setSensorData(null);
+      setDeviceStatus({
+        online: false,
+        lastUpdate: null,
+        minutesAgo: 0,
+        status: "Connection failed"
+      });
     }
   };
 
@@ -626,20 +668,21 @@ const speakText = (text) => {
             <div className="flex items-center gap-2">
               <span className={cn(
                 "w-2 h-2 rounded-full",
-                sensorData ? "bg-green-500 animate-pulse" : "bg-red-500"
+                deviceStatus.online ? "bg-green-500 animate-pulse" : "bg-red-500"
               )}></span>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                {deviceStatus.online ? "Online" : `Offline (${deviceStatus.minutesAgo}m ago)`}
               </span>
             </div>
             {sensorData && (
               <div className="flex items-center gap-2 lg:gap-3 mt-1 text-xs text-slate-500 flex-wrap">
                 <div className="flex items-center gap-1">
                   <Droplets className="w-3 h-3 text-blue-500" />
-                  <span>{sensorData.moisture}%</span>
+                  <span>{sensorData.temperature}°C</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Thermometer className="w-3 h-3 text-orange-500" />
-                  <span>{sensorData.temperature}°C</span>
+                  <span>{sensorData.moisture}%</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Wind className="w-3 h-3 text-cyan-500" />
@@ -649,7 +692,7 @@ const speakText = (text) => {
             )}
             {!sensorData && (
               <div className="mt-1 text-xs text-red-500">
-                No sensor data available - device may be offline
+                {deviceStatus.status || "No sensor data available - device may be offline"}
               </div>
             )}
           </div>

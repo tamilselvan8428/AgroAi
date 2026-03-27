@@ -88,8 +88,8 @@ const CropPrediction = () => {
 
   useEffect(() => {
     fetchSensorData();
-    // Refresh sensor data every 30 seconds
-    const interval = setInterval(fetchSensorData, 30000);
+    // Refresh sensor data every 10 seconds
+    const interval = setInterval(fetchSensorData, 10000);
     return () => clearInterval(interval);
   }, []);
 
