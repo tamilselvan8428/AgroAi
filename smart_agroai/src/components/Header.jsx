@@ -1,53 +1,122 @@
 import React from "react";
-import { User, Menu, Sprout } from "lucide-react";
+
+import { Bell, User, Search, Menu } from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
-import LanguageToggle from "./LanguageToggle";
-import { useTranslation } from "react-i18next";
+
+
 
 const Header = ({ onMenuClick }) => {
+
   const { user } = useAuth();
-  const { t } = useTranslation();
+
+
 
   return (
-    <header className="h-20 lg:h-24 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 shadow-sm">
+
+    <header className="h-16 lg:h-20 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 shadow-sm">
+
       {/* Mobile Menu Button */}
+
       <button
+
         onClick={onMenuClick}
-        className="lg:hidden p-3 rounded-lg hover:bg-slate-100 transition-colors"
+
+        className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+
       >
-        <Menu className="w-7 h-7 text-slate-600" />
+
+        <Menu className="w-6 h-6 text-slate-600" />
+
       </button>
 
-      {/* AgroAI Branding - Centered */}
-      <div className="flex-1 flex items-center justify-center lg:justify-start">
-        <div className="flex items-center gap-3 group">
-          <div className="bg-green-600 p-2 rounded-xl group-hover:rotate-12 transition-transform duration-300">
-            <Sprout className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-          </div>
-          <span className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">
-            {t('landing.title')}
-          </span>
-        </div>
+
+
+      {/* Search Bar - Hidden on Mobile */}
+
+      <div className="hidden lg:flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 w-96">
+
+        <Search className="w-5 h-5 text-slate-400" />
+
+        <input
+
+          type="text"
+
+          placeholder="Search sensor data, crops..."
+
+          className="bg-transparent border-none focus:ring-0 text-slate-600 placeholder:text-slate-400 w-full"
+
+        />
+
       </div>
+
+
 
       {/* Right Section */}
+
       <div className="flex items-center gap-4 lg:gap-6">
-        {/* Language Toggle */}
-        <LanguageToggle />
-        
-        {/* User Info */}
-        <div className="flex items-center gap-3 lg:gap-4 pl-5 lg:pl-8 border-l border-slate-200">
-          <div className="text-right hidden sm:block">
-            <p className="text-base lg:text-lg font-bold text-slate-900">{user?.name || "Farmer User"}</p>
-            <p className="text-xs sm:text-sm text-slate-500 font-medium hidden lg:block">{user?.email || "user@smartfarm.com"}</p>
-          </div>
-          <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-green-100 flex items-center justify-center border-2 border-green-500 shadow-sm">
-            <User className="w-5 h-5 lg:w-6 lg:h-6 text-green-600" />
-          </div>
+
+        {/* Mobile Search */}
+
+        <div className="lg:hidden flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+
+          <Search className="w-4 h-4 text-slate-400" />
+
+          <input
+
+            type="text"
+
+            placeholder="Search..."
+
+            className="bg-transparent border-none focus:ring-0 text-slate-600 placeholder:text-slate-400 w-24 text-sm"
+
+          />
+
         </div>
+
+
+
+        {/* Notifications */}
+
+        <button className="relative p-2 rounded-full hover:bg-slate-100 transition-colors">
+
+          <Bell className="w-5 h-5 lg:w-6 lg:h-6 text-slate-600" />
+
+          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+
+        </button>
+
+
+
+        {/* User Info */}
+
+        <div className="flex items-center gap-2 lg:gap-3 pl-4 lg:pl-6 border-l border-slate-200">
+
+          <div className="text-right hidden sm:block">
+
+            <p className="text-sm font-bold text-slate-900">{user?.name || "Farmer User"}</p>
+
+            <p className="text-xs text-slate-500 font-medium hidden lg:block">{user?.email || "user@smartfarm.com"}</p>
+
+          </div>
+
+          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-green-100 flex items-center justify-center border-2 border-green-500 shadow-sm">
+
+            <User className="w-4 h-4 lg:w-6 lg:h-6 text-green-600" />
+
+          </div>
+
+        </div>
+
       </div>
+
     </header>
+
   );
+
 };
 
+
+
 export default Header;
+
