@@ -855,10 +855,10 @@ const speakText = (text) => {
               tamilTTSAvailable ? "bg-green-600" : "bg-blue-500"
             )} />
             <span className="hidden sm:inline">
-              {tamilTTSAvailable ? "Native Tamil TTS" : "Google TTS for Tamil"}
+              {tamilTTSAvailable ? "Native Tamil TTS" : "TTS Available"}
             </span>
             <span className="sm:hidden">
-              {tamilTTSAvailable ? "Tamil" : "Google"}
+              {tamilTTSAvailable ? "Tamil" : "TTS"}
             </span>
             {isSpeaking && currentVoice && (
               <span className="text-slate-500 hidden sm:inline">
