@@ -646,9 +646,9 @@ const speakText = (text) => {
       </AnimatePresence>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full lg:h-auto overflow-hidden">
         {/* Chat Header */}
-        <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-3 sm:gap-4">
+        <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-3 sm:gap-4 flex-shrink-0">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
             <button
               onClick={() => setShowHistory(!showHistory)}
@@ -708,7 +708,7 @@ const speakText = (text) => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-8 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-8 scrollbar-hide">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div
@@ -727,7 +727,7 @@ const speakText = (text) => {
                 {msg.role === "user" ? <User className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" /> : <Bot className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-green-600" />}
               </div>
               <div className={cn(
-                "p-2 sm:p-3 lg:p-5 rounded-[12px] sm:rounded-[16px] lg:rounded-[24px] shadow-sm",
+                "p-2 sm:p-3 lg:p-5 rounded-[12px] sm:rounded-[16px] lg:rounded-[24px] shadow-sm break-words",
                 msg.role === "user" 
                   ? "bg-slate-900 text-white rounded-tr-none" 
                   : "bg-slate-50 text-slate-800 rounded-tl-none border border-slate-100"
@@ -770,7 +770,7 @@ const speakText = (text) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-3 sm:p-4 lg:p-6 border-t border-slate-100 bg-slate-50/50">
+      <div className="p-3 sm:p-4 lg:p-6 border-t border-slate-100 bg-slate-50/50 flex-shrink-0">
         <form onSubmit={handleSend} className="relative flex items-center gap-2 sm:gap-3 lg:gap-4 flex-col sm:flex-row">
           <div className="relative flex-1 group">
             <input
