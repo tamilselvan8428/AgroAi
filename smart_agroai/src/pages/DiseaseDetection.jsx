@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
-import { Upload, Image as ImageIcon, Bug, CheckCircle2, AlertCircle, Loader2, X, Info, Leaf, MapPin, DollarSign, TrendingDown, Lightbulb } from "lucide-react";
+import { Upload, Image as ImageIcon, Bug, CheckCircle2, AlertCircle, Loader2, X, Info, Leaf, MapPin, DollarSign, TrendingDown, Lightbulb, Map } from "lucide-react";
 import { cn } from "../lib/utils";
 import api from "../lib/api";
 
@@ -20,6 +20,83 @@ const DiseaseDetection = () => {
     location: "",
     season: ""
   });
+
+  // Geolocation state
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [locationError, setLocationError] = useState(null);
+
+  // Auto-detect location on component mount
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by this browser");
+      return;
+    }
+
+    setLocationLoading(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        
+        try {
+          // Reverse geocoding to get address from coordinates
+          const address = await getAddressFromCoordinates(latitude, longitude);
+          setAgriculturalData(prev => ({
+            ...prev,
+            location: address
+          }));
+          setLocationLoading(false);
+        } catch (err) {
+          // If reverse geocoding fails, use coordinates
+          setAgriculturalData(prev => ({
+            ...prev,
+            location: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
+          }));
+          setLocationLoading(false);
+        }
+      },
+      (error) => {
+        setLocationError("Unable to retrieve your location");
+        setLocationLoading(false);
+        console.error("Geolocation error:", error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5 minutes
+      }
+    );
+  };
+
+  const getAddressFromCoordinates = async (lat, lon) => {
+    try {
+      // Using Nominatim reverse geocoding (free service)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`
+      );
+      const data = await response.json();
+      
+      if (data && data.display_name) {
+        // Extract meaningful location info
+        const parts = data.display_name.split(',');
+        if (parts.length >= 3) {
+          return `${parts[parts.length - 3].trim()}, ${parts[parts.length - 2].trim()}, ${parts[parts.length - 1].trim()}`;
+        }
+        return data.display_name;
+      }
+      
+      // Fallback to coordinates
+      return `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+    } catch (error) {
+      console.error("Reverse geocoding error:", error);
+      throw error;
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -214,15 +291,46 @@ const DiseaseDetection = () => {
 
             {/* Location */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1">Location</label>
-              <input
-                type="text"
-                name="location"
-                value={agriculturalData.location}
-                onChange={handleAgriculturalDataChange}
-                placeholder="e.g., Maharashtra, India"
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
-              />
+              <label className="text-sm font-bold text-slate-700 ml-1 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-green-600" />
+                Location
+                {locationLoading && <Loader2 className="w-3 h-3 animate-spin text-blue-500" />}
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="location"
+                  value={agriculturalData.location}
+                  onChange={handleAgriculturalDataChange}
+                  placeholder="Detecting your location..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 pr-20 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={getCurrentLocation}
+                  disabled={locationLoading}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50"
+                  title="Detect current location"
+                >
+                  {locationLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Map className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+              {locationError && (
+                <p className="text-xs text-red-500 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {locationError}
+                </p>
+              )}
+              {agriculturalData.location && !locationLoading && (
+                <p className="text-xs text-green-600 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" />
+                  Location detected - you can edit if needed
+                </p>
+              )}
             </div>
 
             {/* Season */}
