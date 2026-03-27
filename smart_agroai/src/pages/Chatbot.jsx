@@ -594,7 +594,7 @@ const speakText = (text) => {
   };
 
   return (
-    <div className="h-[calc(100vh-160px)] flex bg-white rounded-[40px] shadow-sm border border-slate-100 overflow-hidden flex-col lg:flex-row">
+    <div className="h-[calc(100vh-160px)] flex bg-white rounded-[20px] sm:rounded-[30px] lg:rounded-[40px] shadow-sm border border-slate-100 overflow-hidden flex-col lg:flex-row">
       {/* History Sidebar */}
       <AnimatePresence>
         {showHistory && (
@@ -648,66 +648,67 @@ const speakText = (text) => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Chat Header */}
-        <div className="p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-4">
-          <div className="flex items-center gap-2 lg:gap-4 flex-1 min-w-0">
+        <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
             <button
               onClick={() => setShowHistory(!showHistory)}
-              className="p-2 hover:bg-slate-200 rounded-xl transition-colors"
+              className="p-2 sm:p-2 hover:bg-slate-200 rounded-xl transition-colors"
               title="Toggle Chat History"
             >
-              <History className="w-5 h-5 text-slate-600" />
+              <History className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
             </button>
-            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-green-600 rounded-xl lg:rounded-2xl flex items-center justify-center shadow-lg shadow-green-600/20 flex-shrink-0">
-              <Bot className="w-5 h-5 lg:w-7 lg:h-7 text-white" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-green-600 rounded-xl lg:rounded-2xl flex items-center justify-center shadow-lg shadow-green-600/20 flex-shrink-0">
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-white" />
             </div>
-          <div>
-            <h2 className="text-lg lg:text-xl font-bold text-slate-900 flex items-center gap-2 truncate">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 flex items-center gap-2 truncate">
               Farmer Assistant
-              <Sparkles className="w-3 h-3 lg:w-4 lg:h-4 text-green-500 flex-shrink-0" />
+              <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-green-500 flex-shrink-0" />
             </h2>
             <div className="flex items-center gap-2">
               <span className={cn(
-                "w-2 h-2 rounded-full",
+                "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full",
                 deviceStatus.online ? "bg-green-500 animate-pulse" : "bg-red-500"
               )}></span>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <span className="text-[8px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">
                 {deviceStatus.online ? "Online" : `Offline (${deviceStatus.minutesAgo}m ago)`}
               </span>
             </div>
             {sensorData && (
-              <div className="flex items-center gap-2 lg:gap-3 mt-1 text-xs text-slate-500 flex-wrap">
+              <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 mt-1 text-[8px] sm:text-xs text-slate-500 flex-wrap">
                 <div className="flex items-center gap-1">
-                  <Droplets className="w-3 h-3 text-blue-500" />
+                  <Droplets className="w-2 h-2 sm:w-3 sm:h-3 text-blue-500" />
                   <span>{sensorData.temperature}°C</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Thermometer className="w-3 h-3 text-orange-500" />
+                  <Thermometer className="w-2 h-2 sm:w-3 sm:h-3 text-orange-500" />
                   <span>{sensorData.moisture}%</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Wind className="w-3 h-3 text-cyan-500" />
+                  <Wind className="w-2 h-2 sm:w-3 sm:h-3 text-cyan-500" />
                   <span>{sensorData.humidity}%</span>
                 </div>
               </div>
             )}
             {!sensorData && (
-              <div className="mt-1 text-xs text-red-500">
-                {deviceStatus.status || "No sensor data available - device may be offline"}
+              <div className="mt-1 text-[8px] sm:text-xs text-red-500">
+                <span className="hidden sm:inline">{deviceStatus.status || "No sensor data available - device may be offline"}</span>
+                <span className="sm:hidden">No sensor data</span>
               </div>
             )}
           </div>
         </div>
         <button 
           onClick={clearChat}
-          className="p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+          className="p-2 sm:p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
           title="Clear Chat"
         >
-          <Trash2 className="w-5 h-5" />
+          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-4 lg:space-y-8 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-8 scrollbar-hide">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div
@@ -715,38 +716,38 @@ const speakText = (text) => {
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               className={cn(
-                "flex items-start gap-2 lg:gap-4 max-w-[90%] lg:max-w-[80%]",
+                "flex items-start gap-2 sm:gap-3 lg:gap-4 max-w-[85%] sm:max-w-[90%] lg:max-w-[80%]",
                 msg.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
               )}
             >
               <div className={cn(
-                "w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm",
+                "w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm",
                 msg.role === "user" ? "bg-slate-900" : "bg-green-100"
               )}>
-                {msg.role === "user" ? <User className="w-4 h-4 lg:w-5 lg:h-5 text-white" /> : <Bot className="w-4 h-4 lg:w-5 lg:h-5 text-green-600" />}
+                {msg.role === "user" ? <User className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" /> : <Bot className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-green-600" />}
               </div>
               <div className={cn(
-                "p-3 lg:p-5 rounded-[16px] lg:rounded-[24px] shadow-sm",
+                "p-2 sm:p-3 lg:p-5 rounded-[12px] sm:rounded-[16px] lg:rounded-[24px] shadow-sm",
                 msg.role === "user" 
                   ? "bg-slate-900 text-white rounded-tr-none" 
                   : "bg-slate-50 text-slate-800 rounded-tl-none border border-slate-100"
               )}>
-                <div className="flex items-start gap-2 lg:gap-3 flex-col lg:flex-row">
-                  <div className="prose prose-slate max-w-none prose-xs lg:prose-sm prose-invert flex-1 order-2 lg:order-1">
+                <div className="flex items-start gap-2 sm:gap-3 flex-col lg:flex-row">
+                  <div className="prose prose-slate max-w-none prose-xs sm:prose-sm lg:prose-sm prose-invert flex-1 order-2 lg:order-1">
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
                   {msg.role === "bot" && (
                     <button
                       onClick={() => speakMessage(msg.content)}
-                      className="p-1.5 lg:p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-all order-1 lg:order-2 flex-shrink-0"
+                      className="p-1.5 sm:p-2 lg:p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-all order-1 lg:order-2 flex-shrink-0"
                       title="Click to speak this message"
                     >
-                      <Volume2 className="w-3 h-3 lg:w-4 lg:h-4" />
+                      <Volume2 className="w-3 h-3 sm:w-3 sm:h-3 lg:w-4 lg:h-4" />
                     </button>
                   )}
                 </div>
                 <p className={cn(
-                  "text-[8px] lg:text-[10px] mt-1 lg:mt-2 font-bold opacity-50",
+                  "text-[6px] sm:text-[8px] lg:text-[10px] mt-1 lg:mt-2 font-bold opacity-50",
                   msg.role === "user" ? "text-right" : "text-left"
                 )}>
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -759,9 +760,9 @@ const speakText = (text) => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex items-center gap-2 lg:gap-3 text-slate-400 font-bold text-xs lg:text-sm ml-10 lg:ml-14"
+            className="flex items-center gap-2 sm:gap-3 text-slate-400 font-bold text-[10px] sm:text-xs lg:text-sm ml-8 sm:ml-10 lg:ml-14"
           >
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
             Assistant is thinking...
           </motion.div>
         )}
@@ -769,57 +770,60 @@ const speakText = (text) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 lg:p-6 border-t border-slate-100 bg-slate-50/50">
-        <form onSubmit={handleSend} className="relative flex items-center gap-2 lg:gap-4 flex-col lg:flex-row">
+      <div className="p-3 sm:p-4 lg:p-6 border-t border-slate-100 bg-slate-50/50">
+        <form onSubmit={handleSend} className="relative flex items-center gap-2 sm:gap-3 lg:gap-4 flex-col sm:flex-row">
           <div className="relative flex-1 group">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about crops, soil, or weather... in any language"
-              className="w-full bg-white border border-slate-200 rounded-xl lg:rounded-2xl py-3 lg:py-4 pl-4 lg:pl-6 pr-12 lg:pr-14 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium shadow-sm text-sm lg:text-base"
+              className="w-full bg-white border border-slate-200 rounded-xl lg:rounded-2xl py-2.5 sm:py-3 lg:py-4 pl-3 sm:pl-4 lg:pl-6 pr-10 sm:pr-12 lg:pr-14 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium shadow-sm text-xs sm:text-sm lg:text-base"
             />
-            <div className="absolute right-3 lg:right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 lg:gap-2">
+            <div className="absolute right-2 sm:right-3 lg:right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 sm:gap-2">
               <button
                 type="button"
                 onClick={isListening ? stopListening : startListening}
                 disabled={!recognition}
                 className={cn(
-                  "p-1.5 lg:p-2 rounded-lg transition-all",
+                  "p-1.5 sm:p-2 lg:p-2 rounded-lg transition-all",
                   isListening 
                     ? "bg-red-100 text-red-600 hover:bg-red-200 animate-pulse" 
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 )}
                 title={recognition ? (isListening ? "Stop listening" : "Start voice input") : "Voice recognition not supported"}
               >
-                {isListening ? <MicOff className="w-3 h-3 lg:w-4 lg:h-4" /> : <Mic className="w-3 h-3 lg:w-4 lg:h-4" />}
+                {isListening ? <MicOff className="w-3 h-3 sm:w-3 sm:h-3 lg:w-4 lg:h-4" /> : <Mic className="w-3 h-3 sm:w-3 sm:h-3 lg:w-4 lg:h-4" />}
               </button>
               <button
                 type="button"
                 onClick={toggleSpeech}
                 className={cn(
-                  "p-1.5 lg:p-2 rounded-lg transition-all",
+                  "p-1.5 sm:p-2 lg:p-2 rounded-lg transition-all",
                   speechEnabled 
                     ? "bg-green-100 text-green-600 hover:bg-green-200" 
                     : "bg-slate-100 text-slate-400 hover:bg-slate-200"
                 )}
                 title={speechEnabled ? "Disable voice output" : "Enable voice output"}
               >
-                {speechEnabled ? <Volume2 className="w-3 h-3 lg:w-4 lg:h-4" /> : <VolumeX className="w-3 h-3 lg:w-4 lg:h-4" />}
+                {speechEnabled ? <Volume2 className="w-3 h-3 sm:w-3 sm:h-3 lg:w-4 lg:h-4" /> : <VolumeX className="w-3 h-3 sm:w-3 sm:h-3 lg:w-4 lg:h-4" />}
               </button>
             </div>
             {/* Voice Status Indicator */}
             {speechEnabled && (
-              <div className="flex items-center gap-1 lg:gap-2 text-xs text-slate-500 flex-wrap">
+              <div className="flex items-center gap-1 sm:gap-2 text-[8px] sm:text-xs text-slate-400 flex-wrap mt-1 sm:mt-0">
                 <div className={cn(
-                  "w-2 h-2 rounded-full",
+                  "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full",
                   tamilTTSAvailable ? "bg-green-500" : "bg-blue-500"
                 )} />
-                <span>
+                <span className="hidden sm:inline">
                   {tamilTTSAvailable ? "Native Tamil TTS" : "Google TTS for Tamil"}
                 </span>
+                <span className="sm:hidden">
+                  {tamilTTSAvailable ? "Tamil" : "Google"}
+                </span>
                 {isSpeaking && currentVoice && (
-                  <span className="text-slate-400">
+                  <span className="text-slate-400 hidden sm:inline">
                     ({currentVoice})
                   </span>
                 )}
@@ -829,23 +833,26 @@ const speakText = (text) => {
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="w-full lg:w-auto bg-green-600 text-white p-3 lg:p-4 rounded-xl lg:rounded-2xl shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all active:scale-[0.95] disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto lg:w-auto bg-green-600 text-white p-2.5 sm:p-3 lg:p-4 rounded-xl lg:rounded-2xl shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all active:scale-[0.95] disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
           >
-            <Send className="w-4 h-4 lg:w-6 lg:h-6" />
+            <Send className="w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6" />
           </button>
         </form>
-        <div className="flex items-center justify-between mt-3 lg:mt-4 flex-col lg:flex-row gap-2 lg:gap-0">
-          <p className="text-center text-[8px] lg:text-[10px] text-slate-400 font-bold uppercase tracking-widest order-2 lg:order-1">
-            Powered by Gemini AI • Multilingual Support Enabled
+        <div className="flex items-center justify-between mt-2 sm:mt-3 lg:mt-4 flex-col sm:flex-row gap-2 lg:gap-0">
+          <p className="text-center text-[6px] sm:text-[8px] lg:text-[10px] text-slate-400 font-bold uppercase tracking-widest order-2 sm:order-1">
+            <span className="hidden sm:inline">Powered by Gemini AI • Multilingual Support Enabled</span>
+            <span className="sm:hidden">Gemini AI • Multilingual</span>
           </p>
-          <div className="flex items-center gap-2 lg:gap-4 text-[8px] lg:text-[10px] text-slate-400 order-1 lg:order-2 flex-wrap justify-center lg:justify-end">
+          <div className="flex items-center gap-2 sm:gap-4 text-[6px] sm:text-[8px] lg:text-[10px] text-slate-400 order-1 sm:order-2 flex-wrap justify-center sm:justify-end">
             <span className="flex items-center gap-1">
-              {isListening && <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-red-500 rounded-full animate-pulse"></div>}
-              Voice {recognition ? (isListening ? "Listening..." : "Ready") : "Not Supported"}
+              {isListening && <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 lg:w-2 lg:h-2 bg-red-500 rounded-full animate-pulse"></div>}
+              <span className="hidden sm:inline">Voice {recognition ? (isListening ? "Listening..." : "Ready") : "Not Supported"}</span>
+              <span className="sm:hidden">{recognition ? (isListening ? "Listening" : "Ready") : "No Voice"}</span>
             </span>
             <span className="flex items-center gap-1">
-              {isSpeaking && <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-green-500 rounded-full animate-pulse"></div>}
-              Speech {synthesis ? (isSpeaking ? "Speaking..." : "Ready") : "Not Supported"}
+              {isSpeaking && <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 lg:w-2 lg:h-2 bg-green-500 rounded-full animate-pulse"></div>}
+              <span className="hidden sm:inline">Speech {synthesis ? (isSpeaking ? "Speaking..." : "Ready") : "Not Supported"}</span>
+              <span className="sm:hidden">{synthesis ? (isSpeaking ? "Speaking" : "Ready") : "No Speech"}</span>
             </span>
             {detectedLanguage !== 'en-US' && (
               <span className="flex items-center gap-1 text-blue-500">
