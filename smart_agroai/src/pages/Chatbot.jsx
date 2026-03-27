@@ -791,18 +791,18 @@ const speakText = (text) => {
       </div>
 
       {/* Input Area - WhatsApp Style (Fixed at Bottom) */}
-      <div className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 bg-slate-50/50 border-t border-slate-100 flex-shrink-0">
-        <form onSubmit={handleSend} className="flex items-end gap-2 sm:gap-3">
+      <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-[#f8f9fa] border-t border-[#e9ecef] flex-shrink-0">
+        <form onSubmit={handleSend} className="flex items-center gap-2 sm:gap-3">
           {/* Voice Input Button */}
           <button
             type="button"
             onClick={isListening ? stopListening : startListening}
             disabled={!recognition}
             className={cn(
-              "p-2.5 sm:p-3 rounded-full transition-all flex-shrink-0",
+              "p-3 sm:p-3.5 rounded-full transition-all flex-shrink-0 flex items-center justify-center",
               isListening 
-                ? "bg-red-500 text-white hover:bg-red-600 animate-pulse" 
-                : "bg-slate-200 text-slate-600 hover:bg-slate-300"
+                ? "bg-[#ff6b6b] text-white hover:bg-[#ff5252] animate-pulse" 
+                : "bg-[#4ecdc4] text-white hover:bg-[#45b7aa]"
             )}
             title={recognition ? (isListening ? "Stop listening" : "Start voice input") : "Voice recognition not supported"}
           >
@@ -810,18 +810,18 @@ const speakText = (text) => {
           </button>
 
           {/* Text Input Field */}
-          <div className="flex-1 relative max-w-[600px]">
+          <div className="flex-1 relative">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message"
-              className="w-full bg-white rounded-[20px] sm:rounded-[25px] py-2.5 sm:py-3 px-4 sm:px-5 pr-12 sm:pr-14 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-slate-200 shadow-sm"
+              className="w-full bg-white rounded-[25px] sm:rounded-[30px] py-3 sm:py-3.5 px-4 sm:px-6 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-[#dee2e6] shadow-sm"
             />
             
-            {/* Speech Toggle Button - REMOVED */}
-            <div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              {/* Speech Toggle Button REMOVED */}
+            {/* Empty container for removed button */}
+            <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              {/* No button here anymore */}
             </div>
           </div>
 
@@ -830,10 +830,10 @@ const speakText = (text) => {
             type="submit"
             disabled={!input.trim() || loading}
             className={cn(
-              "p-2.5 sm:p-3 rounded-full transition-all flex-shrink-0",
+              "p-3 sm:p-3.5 rounded-full transition-all flex-shrink-0 flex items-center justify-center",
               input.trim() && !loading
-                ? "bg-green-600 text-white hover:bg-green-700" 
-                : "bg-slate-200 text-slate-600"
+                ? "bg-[#4ecdc4] text-white hover:bg-[#45b7aa]" 
+                : "bg-[#e9ecef] text-[#6c757d]"
             )}
             title={input.trim() ? "Send message" : "Type a message to enable send"}
           >
@@ -847,8 +847,8 @@ const speakText = (text) => {
           </button>
         </form>
 
-        {/* Voice Status Indicator */}
-        {speechEnabled && (
+        {/* Voice Status Indicator - COMMENTED OUT */}
+        {/* {speechEnabled && (
           <div className="flex items-center gap-2 text-[10px] sm:text-xs text-slate-500 mt-2 px-2">
             <div className={cn(
               "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full",
@@ -866,7 +866,7 @@ const speakText = (text) => {
               </span>
             )}
           </div>
-        )}
+        )} */}
       </div>
       </div>
     </div>
