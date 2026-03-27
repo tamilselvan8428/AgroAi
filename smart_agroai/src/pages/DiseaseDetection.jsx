@@ -31,6 +31,25 @@ const DiseaseDetection = () => {
 
     setLoading(true);
     setError(null);
+    
+    // Immediate mock response for testing (bypass backend)
+    console.log("🔄 Using immediate mock response for testing");
+    const mockResult = {
+      success: true,
+      disease: "Sample Leaf Analysis",
+      confidence: 85,
+      symptoms: ["Yellow spots on leaves", "Slight leaf curling", "Minor discoloration"],
+      treatment: ["Remove affected leaves", "Apply organic fungicide", "Improve air circulation"],
+      prevention: ["Water plants in morning", "Ensure proper spacing", "Monitor humidity levels"],
+      severity: "Low",
+      fallback: true,
+      note: "Mock response for testing - backend deployment pending"
+    };
+    
+    setResult(mockResult);
+    setLoading(false);
+    return;
+
     try {
       // Create FormData for file upload
       const formData = new FormData();
