@@ -646,7 +646,7 @@ const speakText = (text) => {
       </AnimatePresence>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-full lg:h-auto overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full">
         {/* Chat Header */}
         <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-3 sm:gap-4 flex-shrink-0">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
@@ -790,7 +790,7 @@ const speakText = (text) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area - WhatsApp Style */}
+      {/* Input Area - WhatsApp Style (Fixed at Bottom) */}
       <div className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 bg-slate-50/50 border-t border-slate-100 flex-shrink-0">
         <form onSubmit={handleSend} className="flex items-end gap-2 sm:gap-3">
           {/* Voice Input Button */}
