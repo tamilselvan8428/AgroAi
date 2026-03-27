@@ -690,15 +690,15 @@ const speakText = (text) => {
               <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 mt-1 text-[8px] sm:text-xs text-slate-500 flex-wrap">
                 <div className="flex items-center gap-1">
                   <Droplets className="w-2 h-2 sm:w-3 sm:h-3 text-blue-500" />
-                  <span>{sensorData.temperature}°C</span>
+                  <span>{sensorData.field2 || 0}%</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Thermometer className="w-2 h-2 sm:w-3 sm:h-3 text-orange-500" />
-                  <span>{sensorData.moisture}%</span>
+                  <span>{sensorData.field1 || 0}°C</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Wind className="w-2 h-2 sm:w-3 sm:h-3 text-cyan-500" />
-                  <span>{sensorData.humidity}%</span>
+                  <span>{sensorData.field3 || 0}%</span>
                 </div>
               </div>
             )}
