@@ -123,14 +123,14 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-20 sm:pt-24 pb-16 sm:pb-20 px-4 sm:px-6 relative overflow-visible">
+      <section className="pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20 px-4 sm:px-6 lg:px-8 relative overflow-visible">
         {/* Animated Blobs */}
-        <div className="absolute top-0 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-[60px] sm:blur-[100px] opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-[60px] sm:blur-[100px] opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-20 sm:bottom-32 left-1/2 w-48 sm:w-96 h-48 sm:h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-[60px] sm:blur-[100px] opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-1/4 w-32 sm:w-48 lg:w-96 h-32 sm:h-48 lg:h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-[40px] sm:blur-[60px] lg:blur-[100px] opacity-20 animate-blob"></div>
+        <div className="absolute top-0 right-1/4 w-32 sm:w-48 lg:w-96 h-32 sm:h-48 lg:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-[40px] sm:blur-[60px] lg:blur-[100px] opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-12 sm:bottom-20 lg:bottom-32 left-1/2 w-32 sm:w-48 lg:w-96 h-32 sm:h-48 lg:h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-[40px] sm:blur-[60px] lg:blur-[100px] opacity-20 animate-blob animation-delay-4000"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-16 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -138,15 +138,15 @@ const LandingPage = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="lg:col-span-7 text-center lg:text-left"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-green-50 border border-green-100 text-green-700 text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] mb-4 sm:mb-8 shadow-sm">
-                <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
+              <div className="inline-flex items-center gap-2 px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-full bg-green-50 border border-green-100 text-green-700 text-[6px] sm:text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.05em] sm:tracking-[0.1em] lg:tracking-[0.2em] mb-3 sm:mb-4 lg:mb-8 shadow-sm">
+                <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2 lg:h-2.5 lg:w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-full w-full bg-green-500"></span>
                 </span>
                 AI-Driven Precision Agriculture
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 mb-4 sm:mb-6 leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight text-slate-900 mb-3 sm:mb-4 lg:mb-6 leading-tight">
                 Farming the <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-500 to-indigo-500 animate-gradient">Smart Way</span>
               </h1>
@@ -235,43 +235,42 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6 bg-[#f8fafc] relative overflow-hidden">
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-indigo-50 rounded-full blur-3xl opacity-50"></div>
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-green-50 rounded-full blur-3xl opacity-50"></div>
+      <section id="features" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-[#f8fafc] relative overflow-hidden">
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[300px] sm:w-[400px] lg:w-[600px] h-[300px] sm:h-[400px] lg:h-[600px] bg-indigo-50 rounded-full blur-2xl sm:blur-3xl opacity-50"></div>
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[300px] sm:w-[400px] lg:w-[600px] h-[300px] sm:h-[400px] lg:h-[600px] bg-green-50 rounded-full blur-2xl sm:blur-3xl opacity-50"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">Everything You Need</h2>
-            <p className="text-lg text-slate-600 font-medium max-w-2xl mx-auto">A complete suite of tools designed to take your farming operations to the next level.</p>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 mb-3 sm:mb-4 tracking-tight">Everything You Need</h2>
+            <p className="text-base sm:text-lg text-slate-600 font-medium max-w-2xl mx-auto px-4">A complete suite of tools designed to take your farming operations to the next level.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
                 whileHover={{ y: -10 }}
-                className={`bg-white/80 backdrop-blur-md p-8 rounded-[2rem] border ${feature.border} shadow-xl ${feature.shadow} transition-all duration-300 group overflow-hidden relative`}
+                className={`bg-white/80 backdrop-blur-md p-4 sm:p-6 lg:p-8 rounded-[1rem] sm:rounded-[1.5rem] lg:rounded-[2rem] border ${feature.border} shadow-xl ${feature.shadow} transition-all duration-300 group overflow-hidden relative`}
               >
                 <div className="absolute top-0 right-0 -translate-y-4 translate-x-4 opacity-0 group-hover:opacity-10 transition-opacity">
-                  <feature.icon className={`w-32 h-32 ${feature.color}`} />
+                  <feature.icon className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-32 lg:h-32 ${feature.color}`} />
                 </div>
                 
-                <div className={`${feature.bg} w-16 h-16 rounded-2xl flex items-center justify-center mb-8 rotate-3 group-hover:rotate-0 group-hover:scale-110 transition-all duration-500`}>
-                  <feature.icon className={`w-9 h-9 ${feature.color}`} />
+                <div className={`${feature.bg} w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 lg:mb-8 rotate-3 group-hover:rotate-0 group-hover:scale-110 transition-all duration-500`}>
+                  <feature.icon className={`w-6 h-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9 ${feature.color}`} />
                 </div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">{feature.title}</h3>
-                <p className="text-slate-600 text-[15px] leading-relaxed font-medium">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 mb-3 sm:mb-4 tracking-tight">{feature.title}</h3>
+                <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium">
                   {feature.description}
                 </p>
                 
-                <div className="mt-6 flex items-center gap-2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
+                <div className="mt-4 sm:mt-6 flex items-center gap-2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
                   <span className={feature.color}>Learn more</span>
-                  <ArrowRight className={`w-4 h-4 ${feature.color}`} />
+                  <ArrowRight className={`w-3 h-3 sm:w-4 sm:h-4 ${feature.color}`} />
                 </div>
               </motion.div>
             ))}
