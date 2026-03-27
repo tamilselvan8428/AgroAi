@@ -606,7 +606,7 @@ const speakText = (text) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-white relative">
       {/* History Sidebar */}
       <AnimatePresence>
         {showHistory && (
@@ -616,7 +616,7 @@ const speakText = (text) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
               onClick={() => setShowHistory(false)}
             />
             {/* Sidebar */}
@@ -624,7 +624,7 @@ const speakText = (text) => {
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              className="fixed lg:relative top-0 left-0 h-full w-full lg:w-[320px] bg-white shadow-2xl border-r border-slate-200 z-50 flex flex-col"
+              className="fixed lg:relative top-0 left-0 h-full w-full lg:w-[320px] bg-white shadow-2xl border-r border-slate-200 z-30 flex flex-col"
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               <div className="p-4 border-b border-slate-200 bg-slate-50">
@@ -672,7 +672,7 @@ const speakText = (text) => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0 h-full relative">
         {/* Chat Header - Fixed Position */}
-        <div className="fixed top-0 left-0 right-0 z-30 p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-3 sm:gap-4">
+        <div className="sticky top-0 left-0 right-0 z-10 p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-3 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
             <button
               onClick={() => setShowHistory(!showHistory)}
@@ -685,7 +685,7 @@ const speakText = (text) => {
               <History className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
             </button>
             <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-green-600 rounded-xl lg:rounded-2xl flex items-center justify-center shadow-lg shadow-green-600/20 flex-shrink-0">
-              <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-white" />
+              <Bot className="w-4 h-4 sm:w-5 sm:w-5 lg:w-7 lg:h-7 text-white" />
             </div>
             <div className="min-w-0 flex-1">
               <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 flex items-center gap-2 truncate">
@@ -818,7 +818,7 @@ const speakText = (text) => {
         </div>
 
         {/* Input Area - Fixed Position at Bottom */}
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-white border-t border-slate-100">
+        <div className="sticky bottom-0 left-0 right-0 z-10 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-white border-t border-slate-100">
           <form onSubmit={handleSend} className="flex items-center gap-2 sm:gap-3">
             {/* Voice Input Button */}
             <button
