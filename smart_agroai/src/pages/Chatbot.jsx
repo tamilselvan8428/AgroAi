@@ -611,29 +611,30 @@ const speakText = (text) => {
       <AnimatePresence>
         {showHistory && (
           <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: showHistory ? 320 : 0, opacity: showHistory ? 1 : 0 }}
-            exit={{ width: 0, opacity: 0 }}
-            className="border-r border-slate-100 bg-slate-50/30 flex flex-col w-full lg:w-[320px] absolute lg:relative h-full lg:h-auto z-40 lg:z-10"
+            initial={{ x: "-100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "-100%", opacity: 0 }}
+            className="border-r border-slate-200 bg-white shadow-xl flex flex-col w-full lg:w-[320px] h-full lg:h-auto z-50 lg:z-10"
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <div className="p-4 border-b border-slate-100">
+            <div className="p-4 border-b border-slate-200 bg-slate-50">
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-slate-900 flex items-center gap-2">
-                  <History className="w-4 h-4" />
+                  <History className="w-4 h-4 text-green-600" />
                   Chat History
                 </h3>
                 <button
                   onClick={() => setShowHistory(false)}
-                  className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 text-slate-600" />
                 </button>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
               <button
                 onClick={startNewConversation}
-                className="w-full p-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
+                className="w-full p-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
               >
                 <MessageSquarePlus className="w-4 h-4" />
                 New Chat
@@ -642,7 +643,7 @@ const speakText = (text) => {
                 <button
                   key={index}
                   onClick={() => loadConversation(chat)}
-                  className="w-full p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-left"
+                  className="w-full p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-left shadow-sm"
                 >
                   <div className="font-medium text-slate-900 text-sm truncate">
                     {chat.message}
@@ -664,7 +665,10 @@ const speakText = (text) => {
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
             <button
               onClick={() => setShowHistory(!showHistory)}
-              className="p-2 sm:p-2 hover:bg-slate-200 rounded-xl transition-colors"
+              className={cn(
+                "p-2 sm:p-2 hover:bg-slate-200 rounded-xl transition-colors",
+                showHistory ? "bg-green-100 text-green-600" : ""
+              )}
               title="Toggle Chat History"
             >
               <History className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
