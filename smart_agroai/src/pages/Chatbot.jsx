@@ -606,55 +606,66 @@ const speakText = (text) => {
   };
 
   return (
-    <div className="h-screen flex bg-white overflow-hidden flex-col lg:flex-row">
+    <div className="h-screen flex bg-white overflow-hidden">
       {/* History Sidebar */}
       <AnimatePresence>
         {showHistory && (
-          <motion.div
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "-100%", opacity: 0 }}
-            className="border-r border-slate-200 bg-white shadow-xl flex flex-col w-full lg:w-[320px] h-full lg:h-auto z-50 lg:z-10"
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            <div className="p-4 border-b border-slate-200 bg-slate-50">
-              <div className="flex items-center justify-between">
-                <h3 className="font-bold text-slate-900 flex items-center gap-2">
-                  <History className="w-4 h-4 text-green-600" />
-                  Chat History
-                </h3>
-                <button
-                  onClick={() => setShowHistory(false)}
-                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-                >
-                  <X className="w-4 h-4 text-slate-600" />
-                </button>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={() => setShowHistory(false)}
+            />
+            {/* Sidebar */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              className="fixed lg:relative top-0 left-0 h-full w-full lg:w-[320px] bg-white shadow-2xl border-r border-slate-200 z-50 flex flex-col"
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <div className="p-4 border-b border-slate-200 bg-slate-50">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                    <History className="w-4 h-4 text-green-600" />
+                    Chat History
+                  </h3>
+                  <button
+                    onClick={() => setShowHistory(false)}
+                    className="p-2 hover:bg-slate-100 rounded-lg transition-colors lg:hidden"
+                  >
+                    <X className="w-4 h-4 text-slate-600" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-              <button
-                onClick={startNewConversation}
-                className="w-full p-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
-              >
-                <MessageSquarePlus className="w-4 h-4" />
-                New Chat
-              </button>
-              {chatHistory.map((chat, index) => (
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
                 <button
-                  key={index}
-                  onClick={() => loadConversation(chat)}
-                  className="w-full p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-left shadow-sm"
+                  onClick={startNewConversation}
+                  className="w-full p-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
                 >
-                  <div className="font-medium text-slate-900 text-sm truncate">
-                    {chat.message}
-                  </div>
-                  <div className="text-xs text-slate-500 mt-1">
-                    {new Date(chat.timestamp).toLocaleDateString()}
-                  </div>
+                  <MessageSquarePlus className="w-4 h-4" />
+                  New Chat
                 </button>
-              ))}
-            </div>
-          </motion.div>
+                {chatHistory.map((chat, index) => (
+                  <button
+                    key={index}
+                    onClick={() => loadConversation(chat)}
+                    className="w-full p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-left shadow-sm"
+                  >
+                    <div className="font-medium text-slate-900 text-sm truncate">
+                      {chat.message}
+                    </div>
+                    <div className="text-xs text-slate-500 mt-1">
+                      {new Date(chat.timestamp).toLocaleDateString()}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
@@ -676,193 +687,193 @@ const speakText = (text) => {
             <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-green-600 rounded-xl lg:rounded-2xl flex items-center justify-center shadow-lg shadow-green-600/20 flex-shrink-0">
               <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-white" />
             </div>
-          <div className="min-w-0 flex-1">
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 flex items-center gap-2 truncate">
-              Farmer Assistant
-              <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-green-500 flex-shrink-0" />
-            </h2>
-            <div className="flex items-center gap-2">
-              <span className={cn(
-                "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full",
-                deviceStatus.online ? "bg-green-500 animate-pulse" : "bg-red-500"
-              )}></span>
-              <span className="text-[8px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">
-                {deviceStatus.online ? "Online" : `Offline (${deviceStatus.minutesAgo}m ago)`}
-              </span>
-            </div>
-            {sensorData && (
-              <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 mt-1 text-[8px] sm:text-xs text-slate-500 flex-wrap">
-                <div className="flex items-center gap-1">
-                  <Droplets className="w-2 h-2 sm:w-3 sm:h-3 text-blue-500" />
-                  <span>{sensorData.field2 || 0}%</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Thermometer className="w-2 h-2 sm:w-3 sm:h-3 text-orange-500" />
-                  <span>{sensorData.field1 || 0}°C</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Wind className="w-2 h-2 sm:w-3 sm:h-3 text-cyan-500" />
-                  <span>{sensorData.field3 || 0}%</span>
-                </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 flex items-center gap-2 truncate">
+                Farmer Assistant
+                <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-green-500 flex-shrink-0" />
+              </h2>
+              <div className="flex items-center gap-2">
+                <span className={cn(
+                  "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full",
+                  deviceStatus.online ? "bg-green-500 animate-pulse" : "bg-red-500"
+                )}></span>
+                <span className="text-[8px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  {deviceStatus.online ? "Online" : `Offline (${deviceStatus.minutesAgo}m ago)`}
+                </span>
               </div>
-            )}
-            {!sensorData && (
-              <div className="mt-1 text-[8px] sm:text-xs text-red-500">
-                <span className="hidden sm:inline">{deviceStatus.status || "No sensor data available - device may be offline"}</span>
-                <span className="sm:hidden">No sensor data</span>
-              </div>
-            )}
-          </div>
-        </div>
-        <button 
-          onClick={clearChat}
-          className="p-2 sm:p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-          title="Clear Chat"
-        >
-          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-      </div>
-
-      {/* Messages Area - Scrollable between fixed header and input */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden pt-24 sm:pt-28 lg:pt-36 pb-24 sm:pb-28 lg:pb-32 p-3 sm:p-4 lg:p-6 scrollbar-hide">
-        <AnimatePresence initial={false}>
-          {messages.map((msg, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              className={cn(
-                "flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3",
-                msg.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
+              {sensorData && (
+                <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 mt-1 text-[8px] sm:text-xs text-slate-500 flex-wrap">
+                  <div className="flex items-center gap-1">
+                    <Droplets className="w-2 h-2 sm:w-3 sm:h-3 text-blue-500" />
+                    <span>{sensorData.field2 || 0}%</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Thermometer className="w-2 h-2 sm:w-3 sm:h-3 text-orange-500" />
+                    <span>{sensorData.field1 || 0}°C</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Wind className="w-2 h-2 sm:w-3 sm:h-3 text-cyan-500" />
+                    <span>{sensorData.field3 || 0}%</span>
+                  </div>
+                </div>
               )}
-            >
-              {/* Avatar */}
-              <div className={cn(
-                "w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm",
-                msg.role === "user" ? "bg-[#dcf8c6] order-2" : "bg-green-100 order-1"
-              )}>
-                {msg.role === "user" ? <User className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#128c7e]" /> : <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-600" />}
-              </div>
+              {!sensorData && (
+                <div className="mt-1 text-[8px] sm:text-xs text-red-500">
+                  <span className="hidden sm:inline">{deviceStatus.status || "No sensor data available - device may be offline"}</span>
+                  <span className="sm:hidden">No sensor data</span>
+                </div>
+              )}
+            </div>
+          </div>
+          <button 
+            onClick={clearChat}
+            className="p-2 sm:p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+            title="Clear Chat"
+          >
+            <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+        </div>
 
-              {/* Message Bubble */}
-              <div className={cn(
-                "max-w-[85%] sm:max-w-[85%] lg:max-w-[85%] break-words",
-                msg.role === "user" ? "order-1" : "order-2"
-              )}>
+        {/* Messages Area - Scrollable between fixed header and input */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden pt-24 sm:pt-28 lg:pt-36 pb-24 sm:pb-28 lg:pb-32 p-3 sm:p-4 lg:p-6 scrollbar-hide">
+          <AnimatePresence initial={false}>
+            {messages.map((msg, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                className={cn(
+                  "flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3",
+                  msg.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
+                )}
+              >
+                {/* Avatar */}
                 <div className={cn(
-                  "px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl sm:rounded-3xl shadow-sm",
-                  msg.role === "user" 
-                    ? "bg-[#dcf8c6] text-[#111b21] rounded-br-sm" 
-                    : "bg-white text-slate-800 rounded-bl-sm border border-slate-200"
+                  "w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm",
+                  msg.role === "user" ? "bg-[#dcf8c6] order-2" : "bg-green-100 order-1"
                 )}>
-                  <div className="prose prose-sm max-w-none prose-p:my-1 prose-p:leading-normal">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  {msg.role === "user" ? <User className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#128c7e]" /> : <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-600" />}
+                </div>
+
+                {/* Message Bubble */}
+                <div className={cn(
+                  "max-w-[85%] sm:max-w-[85%] lg:max-w-[85%] break-words",
+                  msg.role === "user" ? "order-1" : "order-2"
+                )}>
+                  <div className={cn(
+                    "px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl sm:rounded-3xl shadow-sm",
+                    msg.role === "user" 
+                      ? "bg-[#dcf8c6] text-[#111b21] rounded-br-sm" 
+                      : "bg-white text-slate-800 rounded-bl-sm border border-slate-200"
+                  )}>
+                    <div className="prose prose-sm max-w-none prose-p:my-1 prose-p:leading-normal">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                    
+                    {/* Speech Button for Bot Messages */}
+                    {msg.role === "bot" && (
+                      <button
+                        onClick={() => speakMessage(msg.content)}
+                        className="mt-1 p-1.5 rounded-lg bg-[#e8f6f3] hover:bg-[#d1e7dd] text-[#128c7e] transition-all flex items-center gap-1"
+                        title="Click to speak this message"
+                      >
+                        <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                      </button>
+                    )}
                   </div>
                   
-                  {/* Speech Button for Bot Messages */}
-                  {msg.role === "bot" && (
-                    <button
-                      onClick={() => speakMessage(msg.content)}
-                      className="mt-1 p-1.5 rounded-lg bg-[#e8f6f3] hover:bg-[#d1e7dd] text-[#128c7e] transition-all flex items-center gap-1"
-                      title="Click to speak this message"
-                    >
-                      <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                    </button>
-                  )}
+                  {/* Timestamp */}
+                  <p className={cn(
+                    "text-[10px] sm:text-[11px] text-slate-500 mt-1 px-1",
+                    msg.role === "user" ? "text-right" : "text-left"
+                  )}>
+                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
-                
-                {/* Timestamp */}
-                <p className={cn(
-                  "text-[10px] sm:text-[11px] text-slate-500 mt-1 px-1",
-                  msg.role === "user" ? "text-right" : "text-left"
-                )}>
-                  {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          
+          {/* Loading Indicator */}
+          {loading && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center gap-2 sm:gap-3 mr-auto"
+            >
+              <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-green-100 flex items-center justify-center shadow-sm">
+                <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-600" />
+              </div>
+              <div className="bg-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200">
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                </div>
               </div>
             </motion.div>
-          ))}
-        </AnimatePresence>
-        
-        {/* Loading Indicator */}
-        {loading && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-2 sm:gap-3 mr-auto"
-          >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-green-100 flex items-center justify-center shadow-sm">
-              <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-600" />
-            </div>
-            <div className="bg-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200">
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Area - Fixed Position at Bottom */}
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-white border-t border-slate-100">
+          <form onSubmit={handleSend} className="flex items-center gap-2 sm:gap-3">
+            {/* Voice Input Button */}
+            <button
+              type="button"
+              onClick={isListening ? stopListening : startListening}
+              disabled={!recognition}
+              className={cn(
+                "p-3 sm:p-3.5 rounded-full transition-all flex-shrink-0 flex items-center justify-center",
+                isListening 
+                  ? "bg-[#ff6b6b] text-white hover:bg-[#ff5252] animate-pulse" 
+                  : "bg-[#4ecdc4] text-white hover:bg-[#45b7aa]"
+              )}
+              title={recognition ? (isListening ? "Stop listening" : "Start voice input") : "Voice recognition not supported"}
+            >
+              {isListening ? <MicOff className="w-5 h-5 sm:w-6 sm:h-6" /> : <Mic className="w-5 h-5 sm:w-6 sm:h-6" />}
+            </button>
+
+            {/* Text Input Field */}
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type a message"
+                className="w-full bg-white rounded-[25px] sm:rounded-[30px] py-3 sm:py-3.5 px-4 sm:px-6 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-slate-200 shadow-sm"
+              />
+              
+              {/* Empty container for removed button */}
+              <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                {/* No button here anymore */}
               </div>
             </div>
-          </motion.div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
 
-      {/* Input Area - Fixed Position at Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-white border-t border-slate-100">
-        <form onSubmit={handleSend} className="flex items-center gap-2 sm:gap-3">
-          {/* Voice Input Button */}
-          <button
-            type="button"
-            onClick={isListening ? stopListening : startListening}
-            disabled={!recognition}
-            className={cn(
-              "p-3 sm:p-3.5 rounded-full transition-all flex-shrink-0 flex items-center justify-center",
-              isListening 
-                ? "bg-[#ff6b6b] text-white hover:bg-[#ff5252] animate-pulse" 
-                : "bg-[#4ecdc4] text-white hover:bg-[#45b7aa]"
-            )}
-            title={recognition ? (isListening ? "Stop listening" : "Start voice input") : "Voice recognition not supported"}
-          >
-            {isListening ? <MicOff className="w-5 h-5 sm:w-6 sm:h-6" /> : <Mic className="w-5 h-5 sm:w-6 sm:h-6" />}
-          </button>
-
-          {/* Text Input Field */}
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type a message"
-              className="w-full bg-white rounded-[25px] sm:rounded-[30px] py-3 sm:py-3.5 px-4 sm:px-6 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-slate-200 shadow-sm"
-            />
-            
-            {/* Empty container for removed button */}
-            <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              {/* No button here anymore */}
-            </div>
-          </div>
-
-          {/* Send Button - No Microphone */}
-          <button
-            type="submit"
-            disabled={!input.trim() || loading}
-            className={cn(
-              "p-3 sm:p-3.5 rounded-full transition-all flex-shrink-0 flex items-center justify-center",
-              input.trim() && !loading
-                ? "bg-[#4ecdc4] text-white hover:bg-[#45b7aa]" 
-                : "bg-slate-200 text-slate-600"
-            )}
-            title={input.trim() ? "Send message" : "Type a message to enable send"}
-          >
-            {input.trim() && !loading ? (
-              <Send className="w-5 h-5 sm:w-6 sm:h-6" />
-            ) : (
-              <div className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
-                <Send className="w-3 h-3 sm:w-4 sm:h-4" />
-              </div>
-            )}
-          </button>
-        </form>
-      </div>
+            {/* Send Button - No Microphone */}
+            <button
+              type="submit"
+              disabled={!input.trim() || loading}
+              className={cn(
+                "p-3 sm:p-3.5 rounded-full transition-all flex-shrink-0 flex items-center justify-center",
+                input.trim() && !loading
+                  ? "bg-[#4ecdc4] text-white hover:bg-[#45b7aa]" 
+                  : "bg-slate-200 text-slate-600"
+              )}
+              title={input.trim() ? "Send message" : "Type a message to enable send"}
+            >
+              {input.trim() && !loading ? (
+                <Send className="w-5 h-5 sm:w-6 sm:h-6" />
+              ) : (
+                <div className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
+                  <Send className="w-3 h-3 sm:w-4 sm:h-4" />
+                </div>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
