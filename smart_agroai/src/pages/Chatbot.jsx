@@ -819,22 +819,9 @@ const speakText = (text) => {
               className="w-full bg-white rounded-[20px] sm:rounded-[25px] py-2.5 sm:py-3 px-4 sm:px-5 pr-12 sm:pr-14 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-slate-200 shadow-sm"
             />
             
-            {/* Action Buttons Inside Input */}
+            {/* Speech Toggle Button - REMOVED */}
             <div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              {/* Speech Toggle Button */}
-              <button
-                type="button"
-                onClick={toggleSpeech}
-                className={cn(
-                  "p-1.5 sm:p-2 rounded-full transition-all",
-                  speechEnabled 
-                    ? "text-green-600 hover:bg-green-50" 
-                    : "text-slate-400 hover:bg-slate-100"
-                )}
-                title={speechEnabled ? "Disable voice output" : "Enable voice output"}
-              >
-                {speechEnabled ? <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" /> : <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />}
-              </button>
+              {/* Speech Toggle Button REMOVED */}
             </div>
           </div>
 
