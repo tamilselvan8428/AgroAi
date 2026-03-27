@@ -606,7 +606,7 @@ const speakText = (text) => {
   };
 
   return (
-    <div className="h-screen flex bg-white overflow-hidden">
+    <div className="flex flex-col h-full bg-white">
       {/* History Sidebar */}
       <AnimatePresence>
         {showHistory && (
