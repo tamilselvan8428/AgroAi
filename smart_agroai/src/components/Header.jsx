@@ -1,5 +1,5 @@
 import React from "react";
-import { Bell, User, Menu, Sprout } from "lucide-react";
+import { User, Menu, Sprout } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const Header = ({ onMenuClick }) => {
@@ -27,12 +27,6 @@ const Header = ({ onMenuClick }) => {
 
       {/* Right Section */}
       <div className="flex items-center gap-4 lg:gap-6">
-        {/* Notifications */}
-        <button className="relative p-3 rounded-full hover:bg-slate-100 transition-colors">
-          <Bell className="w-6 h-6 lg:w-7 lg:h-7 text-slate-600" />
-          <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
-        </button>
-
         {/* User Info */}
         <div className="flex items-center gap-3 lg:gap-4 pl-5 lg:pl-8 border-l border-slate-200">
           <div className="text-right hidden sm:block">
