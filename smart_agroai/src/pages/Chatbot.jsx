@@ -730,11 +730,11 @@ const speakText = (text) => {
 
               {/* Message Bubble */}
               <div className={cn(
-                "max-w-[70%] sm:max-w-[75%] lg:max-w-[80%] break-words",
+                "max-w-[85%] sm:max-w-[85%] lg:max-w-[85%] break-words",
                 msg.role === "user" ? "order-1" : "order-2"
               )}>
                 <div className={cn(
-                  "px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl sm:rounded-3xl shadow-sm",
+                  "px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl sm:rounded-3xl shadow-sm",
                   msg.role === "user" 
                     ? "bg-[#dcf8c6] text-[#111b21] rounded-br-sm" 
                     : "bg-white text-slate-800 rounded-bl-sm border border-slate-200"
