@@ -57,14 +57,67 @@ export const updateThingSpeakField = async (field, value) => {
 
 export const callMLModel = async (inputData) => {
   try {
-    const response = await axios.post(config.mlModel.url, inputData, {
-      headers: {
-        'Content-Type': 'application/json'
+    console.log("🤖 Calling ML Model with data:", Object.keys(inputData));
+    
+    let response;
+    
+    if (inputData.image) {
+      // Handle image data - convert to FormData
+      const FormData = (await import('form-data')).default;
+      const formData = new FormData();
+      
+      // If image is a buffer, append it directly
+      if (Buffer.isBuffer(inputData.image)) {
+        formData.append('image', inputData.image, 'image.jpg');
+      } else {
+        // If image is base64 or string, append as string
+        formData.append('image', inputData.image);
       }
-    });
+      
+      response = await axios.post(config.mlModel.url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 30000 // 30 second timeout
+      });
+    } else {
+      // Handle regular JSON data
+      response = await axios.post(config.mlModel.url, inputData, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000
+      });
+    }
+    
+    console.log("✅ ML Model response received");
     return response.data;
   } catch (error) {
     console.error("ML Model API error:", error.message);
-    throw error;
+    
+    // Handle specific error codes
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || error.response.statusText;
+      
+      if (status === 403) {
+        console.error("🚫 403 Forbidden - Check API access or CORS");
+        throw new Error(`Access forbidden: ${message || 'API access denied'}`);
+      } else if (status === 429) {
+        console.error("⏱️ 429 Rate Limited - Too many requests");
+        throw new Error(`Rate limited: ${message || 'Too many requests'}`);
+      } else if (status === 500) {
+        console.error("💥 500 Server Error - ML model down");
+        throw new Error(`Server error: ${message || 'ML model unavailable'}`);
+      } else {
+        throw new Error(`API error (${status}): ${message || 'Unknown error'}`);
+      }
+    } else if (error.code === 'ECONNABORTED') {
+      throw new Error('Request timeout - ML model took too long to respond');
+    } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to ML model - check URL and network');
+    } else {
+      throw error;
+    }
   }
 };

@@ -18,6 +18,7 @@ const MotorControl = () => {
   const [lastAction, setLastAction] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false); // Prevent multiple requests
+  const [simulationMode, setSimulationMode] = useState(false); // Hardware simulation toggle
 
   useEffect(() => {
     // Test backend connection first
@@ -78,16 +79,24 @@ const MotorControl = () => {
     setError(null);
     
     try {
-      const response = await api.post("/api/motor/control", { action });
+      // Use simulation mode if enabled
+      const endpoint = simulationMode ? "/api/motor/control?simulation=true" : "/api/motor/control";
+      const response = await api.post(endpoint, { action });
       
-      console.log(`Motor control response:`, response.data);
+      console.log(`Motor control response (${simulationMode ? 'simulation' : 'real'}):`, response.data);
       
       setLastAction({
         action: action,
         timestamp: response.data.timestamp,
         message: response.data.message,
-        note: response.data.note
+        note: response.data.note,
+        simulationMode: response.data.simulationMode
       });
+      
+      // Show simulation mode indicator in console
+      if (response.data.simulationMode) {
+        console.log("🔧 HARDWARE SIMULATION MODE - No actual hardware controlled");
+      }
       
       // Refresh status after a short delay to allow ESP32 to sync
       setTimeout(() => {
@@ -163,6 +172,22 @@ const MotorControl = () => {
           </div>
         </div>
         
+        {/* Simulation Mode Toggle */}
+        <div className="flex items-center gap-2">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={simulationMode}
+              onChange={(e) => setSimulationMode(e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
+          <span className="text-xs font-medium text-slate-600">
+            {simulationMode ? 'Simulation' : 'Real'}
+          </span>
+        </div>
+        
         {/* Toggle Switch */}
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -213,6 +238,11 @@ const MotorControl = () => {
           </div>
           <div className="text-xs opacity-75 mt-1">
             {new Date(lastAction.timestamp).toLocaleString()}
+            {lastAction.simulationMode && (
+              <span className="ml-2 text-blue-600 font-semibold">
+                🔧 Simulation Mode
+              </span>
+            )}
           </div>
           {lastAction.note && (
             <div className="text-xs opacity-75 mt-1 italic">

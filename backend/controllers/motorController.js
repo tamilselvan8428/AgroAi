@@ -4,8 +4,10 @@ import { config } from "../config/index.js";
 export const controlMotor = async (req, res) => {
   try {
     const { action } = req.body; // 'on' or 'off'
+    const { simulation = false } = req.query; // ?simulation=true for mock mode
     
     console.log(`Motor control request: ${action} from user:`, req.user?.userId || 'unknown');
+    console.log(`Hardware simulation mode:`, simulation || 'false');
     
     if (!action || !['on', 'off'].includes(action)) {
       console.log(`Invalid action received: ${action}`);
@@ -33,26 +35,38 @@ export const controlMotor = async (req, res) => {
     console.log(`Motor control: ${action} -> field3=${fieldValue}`);
     
     try {
-      const response = await updateThingSpeakField(3, fieldValue);
+      let response;
+      let note = '';
       
-      console.log(`ThingSpeak response data: ${response}`);
-      
-      if (response > 0) {
-        console.log(`ThingSpeak updated successfully. Entry ID: ${response}`);
-        
-        res.json({ 
-          success: true,
-          message: `Motor turned ${action} successfully`,
-          motorStatus: action === 'on' ? 'running' : 'stopped',
-          timestamp: new Date(),
-          thingSpeakResponse: response,
-          note: `Control signal sent to ThingSpeak successfully. Entry ID: ${response}`
-        });
+      if (simulation === 'true') {
+        // Simulation mode - mock successful ThingSpeak update
+        response = Math.floor(Math.random() * 1000) + 1000; // Mock entry ID
+        note = `Hardware simulation mode: Motor ${action} (mock ThingSpeak update). Mock Entry ID: ${response}`;
+        console.log(` SIMULATION MODE: Motor ${action} (mock response: ${response})`);
       } else {
-        // ThingSpeak returned 0, which means the update failed
-        console.error(`ThingSpeak update failed. Response: ${response}`);
-        throw new Error(`ThingSpeak update failed. Response: ${response}. Possible causes: invalid API key, rate limit exceeded, or channel not found.`);
+        // Real ThingSpeak update
+        response = await updateThingSpeakField(3, fieldValue);
+        console.log(`ThingSpeak response data: ${response}`);
+        
+        if (response > 0) {
+          console.log(`ThingSpeak updated successfully. Entry ID: ${response}`);
+          note = `Control signal sent to ThingSpeak successfully. Entry ID: ${response}`;
+        } else {
+          // ThingSpeak returned 0, which means update failed
+          console.error(`ThingSpeak update failed. Response: ${response}`);
+          throw new Error(`ThingSpeak update failed. Response: ${response}. Possible causes: invalid API key, rate limit exceeded, or channel not found.`);
+        }
       }
+      
+      res.json({ 
+        success: true,
+        message: `Motor turned ${action} successfully`,
+        motorStatus: action === 'on' ? 'running' : 'stopped',
+        timestamp: new Date(),
+        thingSpeakResponse: response,
+        simulationMode: simulation === 'true',
+        note: note
+      });
     } catch (thingspeakError) {
       console.error("ThingSpeak update failed:", thingspeakError.message);
       console.error("ThingSpeak error details:", {
@@ -60,6 +74,22 @@ export const controlMotor = async (req, res) => {
         fieldValue: fieldValue,
         timestamp: new Date().toISOString()
       });
+      
+      // Even if ThingSpeak fails, return success in simulation mode
+      if (simulation === 'true') {
+        const mockResponse = Math.floor(Math.random() * 1000) + 1000;
+        console.log(` SIMULATION MODE: Motor ${action} (ThingSpeak failed, but returning mock success: ${mockResponse})`);
+        return res.json({ 
+          success: true,
+          message: `Motor turned ${action} successfully (simulation mode)`,
+          motorStatus: action === 'on' ? 'running' : 'stopped',
+          timestamp: new Date(),
+          thingSpeakResponse: mockResponse,
+          simulationMode: true,
+          note: `Hardware simulation mode: Motor ${action} (ThingSpeak failed, but mock success returned). Mock Entry ID: ${mockResponse}`
+        });
+      }
+      
       throw new Error(`Failed to update ThingSpeak: ${thingspeakError.message}`);
     }
 

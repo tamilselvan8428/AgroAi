@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
 import { motion } from "motion/react";
 import { Upload, Image as ImageIcon, Bug, CheckCircle2, AlertCircle, Loader2, X, Info } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
 import { cn } from "../lib/utils";
+import api from "../lib/api";
 
 const DiseaseDetection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -32,36 +32,47 @@ const DiseaseDetection = () => {
     setLoading(true);
     setError(null);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const base64Data = previewUrl.split(",")[1];
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('image', selectedImage);
 
-      const prompt = `As an expert plant pathologist, analyze this leaf image and identify any diseases. 
-      Provide the result in a structured JSON format with:
-      - diseaseName: string (e.g., "Tomato Early Blight", "Healthy")
-      - confidence: number (0-100)
-      - symptoms: string[]
-      - treatment: string[]
-      - prevention: string[]
-      - severity: "Low" | "Medium" | "High"`;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              { inlineData: { data: base64Data, mimeType: selectedImage.type } }
-            ]
-          }
-        ],
-        config: { responseMimeType: "application/json" }
+      // Call crop disease prediction endpoint
+      const response = await api.post('/predict', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 30000 // 30 second timeout
       });
 
-      const detection = JSON.parse(response.text);
-      setResult(detection);
+      // Handle the response from crop disease prediction endpoint
+      if (response.data && response.data.success) {
+        const prediction = response.data;
+        
+        // Format the response to match expected structure
+        const formattedResult = {
+          diseaseName: prediction.disease || prediction.class || "Unknown",
+          confidence: prediction.confidence || prediction.probability || 0,
+          symptoms: prediction.symptoms || [],
+          treatment: prediction.treatment || [],
+          prevention: prediction.prevention || [],
+          severity: prediction.severity || "Medium"
+        };
+        
+        setResult(formattedResult);
+      } else {
+        setError(response.data?.message || "Failed to analyze the image");
+      }
     } catch (err) {
       console.error("Detection error:", err);
-      setError("Failed to analyze the image. Please try again with a clearer photo.");
+      if (err.code === 'ECONNABORTED') {
+        setError("Request timed out. Please try again.");
+      } else if (err.response?.status === 413) {
+        setError("Image file too large. Please use a smaller image.");
+      } else if (err.response?.status === 400) {
+        setError("Invalid image format. Please use JPG, PNG, or WEBP.");
+      } else {
+        setError("Failed to analyze the image. Please try again with a clearer photo.");
+      }
     } finally {
       setLoading(false);
     }

@@ -15,7 +15,7 @@ export const config = {
     writeApiKey: "K3H52YQQRAIKCS59"
   },
   mlModel: {
-    url: "https://croppredictor-hqfk.onrender.com/predict"
+    url: "https://crop-disease-70gb.onrender.com/predict"
   }
 };
 
