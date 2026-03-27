@@ -614,7 +614,7 @@ const speakText = (text) => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: showHistory ? 320 : 0, opacity: showHistory ? 1 : 0 }}
             exit={{ width: 0, opacity: 0 }}
-            className="border-r border-slate-100 bg-slate-50/30 flex flex-col w-full lg:w-[320px] absolute lg:relative h-full lg:h-auto z-10 lg:z-0"
+            className="border-r border-slate-100 bg-slate-50/30 flex flex-col w-full lg:w-[320px] absolute lg:relative h-full lg:h-auto z-40 lg:z-10"
           >
             <div className="p-4 border-b border-slate-100">
               <div className="flex items-center justify-between">
