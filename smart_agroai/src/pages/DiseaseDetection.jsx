@@ -16,96 +16,8 @@ const DiseaseDetection = () => {
   const [agriculturalData, setAgriculturalData] = useState({
     plantType: "",
     fieldArea: "",
-    fertilizersUsed: "",
-    location: ""
+    fertilizersUsed: ""
   });
-
-  // Geolocation state
-  const [locationLoading, setLocationLoading] = useState(false);
-  const [locationError, setLocationError] = useState(null);
-
-  // Auto-detect location on component mount
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
-  const getSeasonFromMonth = () => {
-    const month = new Date().getMonth();
-    
-    // Indian seasons based on month only
-    if (month >= 6 && month <= 9) return "Kharif (Monsoon)";
-    if (month >= 10 && month <= 1) return "Rabi (Winter)";
-    if (month >= 2 && month <= 5) return "Zaid (Summer)";
-    return "Year-round";
-  };
-
-  const getCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by this browser");
-      return;
-    }
-
-    setLocationLoading(true);
-    setLocationError(null);
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        
-        try {
-          // Reverse geocoding to get address from coordinates
-          const address = await getAddressFromCoordinates(latitude, longitude);
-          setAgriculturalData(prev => ({
-            ...prev,
-            location: address
-          }));
-          setLocationLoading(false);
-        } catch (err) {
-          // If reverse geocoding fails, use coordinates
-          setAgriculturalData(prev => ({
-            ...prev,
-            location: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
-          }));
-          setLocationLoading(false);
-        }
-      },
-      (error) => {
-        setLocationError("Unable to retrieve your location");
-        setLocationLoading(false);
-        console.error("Geolocation error:", error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000 // 5 minutes
-      }
-    );
-  };
-
-  const getAddressFromCoordinates = async (lat, lon) => {
-    try {
-      // Using Nominatim reverse geocoding (free service)
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`
-      );
-      const data = await response.json();
-      
-      if (data && data.display_name) {
-        // Extract meaningful location info
-        const parts = data.display_name.split(',');
-        if (parts.length >= 3) {
-          return `${parts[parts.length - 3].trim()}, ${parts[parts.length - 2].trim()}, ${parts[parts.length - 1].trim()}`;
-        }
-        return data.display_name;
-      }
-      
-      // Fallback to coordinates
-      return `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-    } catch (error) {
-      console.error("Reverse geocoding error:", error);
-      throw error;
-    }
-  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -136,7 +48,6 @@ const DiseaseDetection = () => {
     
     // Immediate mock response for testing (bypass backend)
     console.log("🔄 Using immediate mock response for testing");
-    const currentSeason = getSeasonFromMonth();
     const mockResult = {
       success: true,
       disease: "Tomato Early Blight",
@@ -171,15 +82,8 @@ const DiseaseDetection = () => {
         applicationMethod: "Soil drenching + foliar spray"
       },
       
-      // Month-based season info
-      seasonInfo: {
-        current: currentSeason,
-        monthBased: true,
-        recommendations: currentSeason.includes("Monsoon") ? "Increase fungicide frequency" : "Monitor humidity levels"
-      },
-      
       fallback: true,
-      note: "Comprehensive agricultural analysis with month-based season detection - backend deployment pending"
+      note: "Comprehensive agricultural analysis - backend deployment pending"
     };
     
     setResult(mockResult);
@@ -250,129 +154,7 @@ const DiseaseDetection = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-        {/* Agricultural Information Form */}
-        <div className="bg-white p-4 sm:p-6 lg:p-8 xl:p-10 rounded-[20px] sm:rounded-[30px] lg:rounded-[40px] shadow-sm border border-slate-100">
-          <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <Leaf className="w-5 h-5 text-green-600" />
-            Agricultural Information
-          </h3>
-          
-          <div className="space-y-4">
-            {/* Plant Type */}
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1">Plant Type</label>
-              <select
-                name="plantType"
-                value={agriculturalData.plantType}
-                onChange={handleAgriculturalDataChange}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
-              >
-                <option value="">Select Plant Type...</option>
-                <option value="tomato">Tomato</option>
-                <option value="potato">Potato</option>
-                <option value="rice">Rice</option>
-                <option value="wheat">Wheat</option>
-                <option value="corn">Corn</option>
-                <option value="cotton">Cotton</option>
-                <option value="sugarcane">Sugarcane</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            {/* Field Area */}
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1">Field Area (Acres)</label>
-              <input
-                type="number"
-                name="fieldArea"
-                value={agriculturalData.fieldArea}
-                onChange={handleAgriculturalDataChange}
-                placeholder="e.g., 2.5"
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
-              />
-            </div>
-
-            {/* Fertilizers Used */}
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1">Fertilizers Used</label>
-              <input
-                type="text"
-                name="fertilizersUsed"
-                value={agriculturalData.fertilizersUsed}
-                onChange={handleAgriculturalDataChange}
-                placeholder="e.g., NPK 19-19-19, Urea, DAP"
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
-              />
-            </div>
-
-            {/* Location */}
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-green-600" />
-                Location
-                {locationLoading && <Loader2 className="w-3 h-3 animate-spin text-blue-500" />}
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="location"
-                  value={agriculturalData.location}
-                  onChange={handleAgriculturalDataChange}
-                  placeholder="Detecting your location..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 pr-20 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium"
-                />
-                <button
-                  type="button"
-                  onClick={getCurrentLocation}
-                  disabled={locationLoading}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50"
-                  title="Detect current location"
-                >
-                  {locationLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Map className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-              {locationError && (
-                <p className="text-xs text-red-500 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
-                  {locationError}
-                </p>
-              )}
-              {agriculturalData.location && !locationLoading && (
-                <p className="text-xs text-green-600 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  Location detected - you can edit if needed
-                </p>
-              )}
-            </div>
-
-            {/* Auto-detected Season */}
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1 flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-green-600" />
-                Growing Season
-              </label>
-              <div className="bg-blue-50 border border-blue-100 rounded-2xl py-3 px-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-900 font-medium">
-                    {getSeasonFromMonth()}
-                  </span>
-                  <span className="text-xs text-blue-600 font-medium">
-                    Auto-detected
-                  </span>
-                </div>
-                <div className="text-xs text-slate-500 mt-1">
-                  Based on current month: {new Date().toLocaleDateString('en-US', { month: 'long' })}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
         {/* Upload Section */}
         <div className="bg-white p-4 sm:p-6 lg:p-8 xl:p-10 rounded-[20px] sm:rounded-[30px] lg:rounded-[40px] shadow-sm border border-slate-100 flex flex-col items-center justify-center min-h-[400px] sm:min-h-[500px] relative">
           {!previewUrl ? (
@@ -516,30 +298,6 @@ const DiseaseDetection = () => {
                         <p className="text-xs sm:text-sm text-slate-500 font-medium mb-1">Total Potential Loss</p>
                         <p className="text-lg sm:text-xl font-bold text-red-600">{result.economicImpact.totalLoss}</p>
                       </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Season Information */}
-                {result.seasonInfo && (
-                  <div className="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 sm:p-6">
-                    <h4 className="text-xs sm:text-sm font-bold text-yellow-600 uppercase tracking-widest mb-3 sm:mb-4 flex items-center gap-2">
-                      <Leaf className="w-4 h-4" />
-                      Seasonal Analysis
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                      <div>
-                        <p className="text-xs sm:text-sm text-slate-500 font-medium mb-1">Current Season</p>
-                        <p className="text-sm sm:text-base font-bold text-slate-900">{result.seasonInfo.current}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm text-slate-500 font-medium mb-1">Seasonal Advice</p>
-                        <p className="text-sm sm:text-base font-bold text-yellow-700">{result.seasonInfo.recommendations}</p>
-                      </div>
-                    </div>
-                    <div className="text-xs text-slate-500 mt-3 flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-green-500" />
-                      Season auto-detected from current month
                     </div>
                   </div>
                 )}
