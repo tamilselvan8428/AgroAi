@@ -128,8 +128,8 @@ const CropPrediction = () => {
 
       console.log("Sending to ML model:", modelInput);
 
-      // Call your ML model backend
-      const response = await axios.post("https://croppredictor-hqfk.onrender.com/predict", modelInput);
+      // Call backend API instead of direct ML model
+      const response = await api.post("/predict", modelInput);
       
       console.log("ML model response:", response.data);
 
