@@ -332,6 +332,50 @@ const DiseaseDetection = () => {
 
 
 
+  // Function to validate if the uploaded image is a leaf
+  const validateLeafImage = async (imageFile) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        // Create a canvas to analyze the image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        
+        // Get image data for analysis
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        
+        // Simple color analysis - check for green pixels (leaf characteristic)
+        let greenPixels = 0;
+        let totalPixels = data.length / 4;
+        
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          
+          // Check if pixel has green characteristics (higher green channel)
+          if (g > r && g > b && g > 50) {
+            greenPixels++;
+          }
+        }
+        
+        // If more than 15% of pixels are green, consider it a leaf image
+        const greenRatio = greenPixels / totalPixels;
+        resolve(greenRatio > 0.15);
+      };
+      
+      img.onerror = () => {
+        resolve(false);
+      };
+      
+      img.src = URL.createObjectURL(imageFile);
+    });
+  };
+
   const detectDisease = async () => {
 
     if (!selectedImage) return;
@@ -341,6 +385,18 @@ const DiseaseDetection = () => {
     setLoading(true);
 
     setError(null);
+
+    // Validate if the uploaded image is a leaf
+    console.log("🔍 Validating if image is a leaf...");
+    const isLeafImage = await validateLeafImage(selectedImage);
+    
+    if (!isLeafImage) {
+      setError("Please upload a leaf photo for disease detection.");
+      setLoading(false);
+      return;
+    }
+    
+    console.log("✅ Image validated as leaf - proceeding with disease detection");
 
     
 
