@@ -1,5 +1,5 @@
 import React from "react";
-import { Bell, User, Search, Menu } from "lucide-react";
+import { Bell, User, Menu, Sprout } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const Header = ({ onMenuClick }) => {
@@ -15,28 +15,18 @@ const Header = ({ onMenuClick }) => {
         <Menu className="w-6 h-6 text-slate-600" />
       </button>
 
-      {/* Search Bar - Hidden on Mobile */}
-      <div className="hidden lg:flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 w-96">
-        <Search className="w-5 h-5 text-slate-400" />
-        <input
-          type="text"
-          placeholder="Search sensor data, crops..."
-          className="bg-transparent border-none focus:ring-0 text-slate-600 placeholder:text-slate-400 w-full"
-        />
+      {/* AgroAI Branding - Centered */}
+      <div className="flex-1 flex items-center justify-center lg:justify-start">
+        <div className="flex items-center gap-2 group">
+          <div className="bg-green-600 p-1.5 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+            <Sprout className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          </div>
+          <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Agro<span className="text-green-600">Ai</span></span>
+        </div>
       </div>
 
       {/* Right Section */}
       <div className="flex items-center gap-4 lg:gap-6">
-        {/* Mobile Search */}
-        <div className="lg:hidden flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-          <Search className="w-4 h-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-transparent border-none focus:ring-0 text-slate-600 placeholder:text-slate-400 w-24 text-sm"
-          />
-        </div>
-
         {/* Notifications */}
         <button className="relative p-2 rounded-full hover:bg-slate-100 transition-colors">
           <Bell className="w-5 h-5 lg:w-6 lg:h-6 text-slate-600" />
