@@ -825,7 +825,7 @@ const speakText = (text) => {
             </div>
           </div>
 
-          {/* Send/Record Button */}
+          {/* Send Button - No Microphone */}
           <button
             type="submit"
             disabled={!input.trim() || loading}
@@ -835,12 +835,14 @@ const speakText = (text) => {
                 ? "bg-green-600 text-white hover:bg-green-700" 
                 : "bg-slate-200 text-slate-600"
             )}
-            title={input.trim() ? "Send message" : "Voice input"}
+            title={input.trim() ? "Send message" : "Type a message to enable send"}
           >
             {input.trim() && !loading ? (
               <Send className="w-5 h-5 sm:w-6 sm:h-6" />
             ) : (
-              <Mic className="w-5 h-5 sm:w-6 sm:h-6" />
+              <div className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
+                <Send className="w-3 h-3 sm:w-4 sm:h-4" />
+              </div>
             )}
           </button>
         </form>
