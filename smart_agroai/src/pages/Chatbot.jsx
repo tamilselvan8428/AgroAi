@@ -658,9 +658,9 @@ const speakText = (text) => {
       </AnimatePresence>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-full">
-        {/* Chat Header */}
-        <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-3 sm:gap-4 flex-shrink-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full relative">
+        {/* Chat Header - Fixed Position */}
+        <div className="absolute top-0 left-0 right-0 z-20 p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-3 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
             <button
               onClick={() => setShowHistory(!showHistory)}
@@ -719,8 +719,8 @@ const speakText = (text) => {
         </button>
       </div>
 
-      {/* Messages Area - WhatsApp Style Bubbles */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 lg:p-6 scrollbar-hide">
+      {/* Messages Area - Scrollable between fixed header and input */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden pt-20 sm:pt-24 lg:pt-32 pb-24 sm:pb-28 lg:pb-32 p-3 sm:p-4 lg:p-6 scrollbar-hide">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div
@@ -802,8 +802,8 @@ const speakText = (text) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area - WhatsApp Style (Fixed at Bottom) */}
-      <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-[#f8f9fa] border-t border-[#e9ecef] flex-shrink-0">
+      {/* Input Area - Fixed Position at Bottom */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-[#f8f9fa] border-t border-[#e9ecef]">
         <form onSubmit={handleSend} className="flex items-center gap-2 sm:gap-3">
           {/* Voice Input Button */}
           <button
@@ -858,8 +858,6 @@ const speakText = (text) => {
             )}
           </button>
         </form>
-
-
       </div>
       </div>
     </div>
