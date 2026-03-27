@@ -658,9 +658,9 @@ const speakText = (text) => {
       </AnimatePresence>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-full relative overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full relative">
         {/* Chat Header - Fixed Position */}
-        <div className="fixed top-0 left-0 right-0 z-30 p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 flex-wrap gap-3 sm:gap-4">
+        <div className="fixed top-0 left-0 right-0 z-30 p-3 sm:p-4 lg:p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-3 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
             <button
               onClick={() => setShowHistory(!showHistory)}
@@ -803,7 +803,7 @@ const speakText = (text) => {
       </div>
 
       {/* Input Area - Fixed Position at Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-[#f8f9fa] border-t border-[#e9ecef]">
+      <div className="fixed bottom-0 left-0 right-0 z-30 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-white border-t border-slate-100">
         <form onSubmit={handleSend} className="flex items-center gap-2 sm:gap-3">
           {/* Voice Input Button */}
           <button
@@ -828,7 +828,7 @@ const speakText = (text) => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message"
-              className="w-full bg-white rounded-[25px] sm:rounded-[30px] py-3 sm:py-3.5 px-4 sm:px-6 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-[#dee2e6] shadow-sm"
+              className="w-full bg-white rounded-[25px] sm:rounded-[30px] py-3 sm:py-3.5 px-4 sm:px-6 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-slate-200 shadow-sm"
             />
             
             {/* Empty container for removed button */}
@@ -845,7 +845,7 @@ const speakText = (text) => {
               "p-3 sm:p-3.5 rounded-full transition-all flex-shrink-0 flex items-center justify-center",
               input.trim() && !loading
                 ? "bg-[#4ecdc4] text-white hover:bg-[#45b7aa]" 
-                : "bg-[#e9ecef] text-[#6c757d]"
+                : "bg-slate-200 text-slate-600"
             )}
             title={input.trim() ? "Send message" : "Type a message to enable send"}
           >
