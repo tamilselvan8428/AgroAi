@@ -172,9 +172,21 @@ const Chatbot = () => {
       // Use the sensors/latest endpoint which returns ThingSpeak data with status
       const response = await api.get("/api/sensors/latest");
       
+      console.log("📡 API Response:", response.data);
+      
       if (response.data.success && response.data.data) {
         const data = response.data.data;
         setSensorData(data);
+        
+        console.log("📊 Sensor Data Set:", {
+          temperature: data.temperature,
+          moisture: data.soilMoisture,
+          humidity: data.humidity,
+          field1: data.field1,
+          field2: data.field2,
+          field3: data.field3,
+          created_at: data.created_at
+        });
         
         // Extract device status from the response
         if (data.deviceStatus) {
