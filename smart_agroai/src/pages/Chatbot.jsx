@@ -594,7 +594,7 @@ const speakText = (text) => {
   };
 
   return (
-    <div className="h-[calc(100vh-160px)] flex bg-[#f0f2f5] rounded-[20px] sm:rounded-[30px] lg:rounded-[40px] shadow-sm border border-slate-100 overflow-hidden flex-col lg:flex-row">
+    <div className="h-[calc(100vh-160px)] flex bg-white rounded-[20px] sm:rounded-[30px] lg:rounded-[40px] shadow-sm border border-slate-100 overflow-hidden flex-col lg:flex-row">
       {/* History Sidebar */}
       <AnimatePresence>
         {showHistory && (
@@ -707,8 +707,8 @@ const speakText = (text) => {
         </button>
       </div>
 
-      {/* Messages Area - WhatsApp Style */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 lg:p-6 bg-[#efeae2] bg-opacity-50 scrollbar-hide">
+      {/* Messages Area - WhatsApp Style Bubbles */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 lg:p-6 scrollbar-hide">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div
@@ -723,9 +723,9 @@ const speakText = (text) => {
               {/* Avatar */}
               <div className={cn(
                 "w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm",
-                msg.role === "user" ? "bg-[#dcf8c6] order-2" : "bg-white order-1"
+                msg.role === "user" ? "bg-[#dcf8c6] order-2" : "bg-green-100 order-1"
               )}>
-                {msg.role === "user" ? <User className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#128c7e]" /> : <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#128c7e]" />}
+                {msg.role === "user" ? <User className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#128c7e]" /> : <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-600" />}
               </div>
 
               {/* Message Bubble */}
@@ -737,7 +737,7 @@ const speakText = (text) => {
                   "px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl sm:rounded-3xl shadow-sm",
                   msg.role === "user" 
                     ? "bg-[#dcf8c6] text-[#111b21] rounded-br-sm" 
-                    : "bg-white text-[#111b21] rounded-bl-sm border border-[#e4e6eb]"
+                    : "bg-white text-slate-800 rounded-bl-sm border border-slate-200"
                 )}>
                   <div className="prose prose-sm max-w-none prose-p:my-1 prose-p:leading-normal">
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
@@ -757,7 +757,7 @@ const speakText = (text) => {
                 
                 {/* Timestamp */}
                 <p className={cn(
-                  "text-[10px] sm:text-[11px] text-[#667781] mt-1 px-1",
+                  "text-[10px] sm:text-[11px] text-slate-500 mt-1 px-1",
                   msg.role === "user" ? "text-right" : "text-left"
                 )}>
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -774,14 +774,14 @@ const speakText = (text) => {
             animate={{ opacity: 1 }}
             className="flex items-center gap-2 sm:gap-3 mr-auto"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
-              <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#128c7e]" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-green-100 flex items-center justify-center shadow-sm">
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-600" />
             </div>
-            <div className="bg-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl sm:rounded-3xl shadow-sm border border-[#e4e6eb]">
+            <div className="bg-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200">
               <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-[#667781] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-[#667781] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-[#667781] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             </div>
           </motion.div>
@@ -791,7 +791,7 @@ const speakText = (text) => {
       </div>
 
       {/* Input Area - WhatsApp Style */}
-      <div className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 bg-[#f0f2f5] flex-shrink-0">
+      <div className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 bg-slate-50/50 border-t border-slate-100 flex-shrink-0">
         <form onSubmit={handleSend} className="flex items-end gap-2 sm:gap-3">
           {/* Voice Input Button */}
           <button
@@ -802,7 +802,7 @@ const speakText = (text) => {
               "p-2.5 sm:p-3 rounded-full transition-all flex-shrink-0",
               isListening 
                 ? "bg-red-500 text-white hover:bg-red-600 animate-pulse" 
-                : "bg-[#e4e6eb] text-[#667781] hover:bg-[#d1d3d6]"
+                : "bg-slate-200 text-slate-600 hover:bg-slate-300"
             )}
             title={recognition ? (isListening ? "Stop listening" : "Start voice input") : "Voice recognition not supported"}
           >
@@ -816,7 +816,7 @@ const speakText = (text) => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message"
-              className="w-full bg-white rounded-[20px] sm:rounded-[25px] py-2.5 sm:py-3 px-4 sm:px-5 pr-12 sm:pr-14 focus:outline-none focus:ring-0 text-[#111b21] placeholder-[#8696a0] text-sm sm:text-base border border-[#e4e6eb] shadow-sm"
+              className="w-full bg-white rounded-[20px] sm:rounded-[25px] py-2.5 sm:py-3 px-4 sm:px-5 pr-12 sm:pr-14 focus:outline-none focus:ring-0 text-slate-900 placeholder-slate-400 text-sm sm:text-base border border-slate-200 shadow-sm"
             />
             
             {/* Action Buttons Inside Input */}
@@ -828,8 +828,8 @@ const speakText = (text) => {
                 className={cn(
                   "p-1.5 sm:p-2 rounded-full transition-all",
                   speechEnabled 
-                    ? "text-[#128c7e] hover:bg-[#e8f6f3]" 
-                    : "text-[#667781] hover:bg-[#f0f2f5]"
+                    ? "text-green-600 hover:bg-green-50" 
+                    : "text-slate-400 hover:bg-slate-100"
                 )}
                 title={speechEnabled ? "Disable voice output" : "Enable voice output"}
               >
@@ -845,8 +845,8 @@ const speakText = (text) => {
             className={cn(
               "p-2.5 sm:p-3 rounded-full transition-all flex-shrink-0",
               input.trim() && !loading
-                ? "bg-[#128c7e] text-white hover:bg-[#00a884]" 
-                : "bg-[#e4e6eb] text-[#667781]"
+                ? "bg-green-600 text-white hover:bg-green-700" 
+                : "bg-slate-200 text-slate-600"
             )}
             title={input.trim() ? "Send message" : "Voice input"}
           >
@@ -860,10 +860,10 @@ const speakText = (text) => {
 
         {/* Voice Status Indicator */}
         {speechEnabled && (
-          <div className="flex items-center gap-2 text-[10px] sm:text-xs text-[#667781] mt-2 px-2">
+          <div className="flex items-center gap-2 text-[10px] sm:text-xs text-slate-500 mt-2 px-2">
             <div className={cn(
               "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full",
-              tamilTTSAvailable ? "bg-[#128c7e]" : "bg-[#00a884]"
+              tamilTTSAvailable ? "bg-green-600" : "bg-blue-500"
             )} />
             <span className="hidden sm:inline">
               {tamilTTSAvailable ? "Native Tamil TTS" : "Google TTS for Tamil"}
@@ -872,7 +872,7 @@ const speakText = (text) => {
               {tamilTTSAvailable ? "Tamil" : "Google"}
             </span>
             {isSpeaking && currentVoice && (
-              <span className="text-[#667781] hidden sm:inline">
+              <span className="text-slate-500 hidden sm:inline">
                 ({currentVoice})
               </span>
             )}
