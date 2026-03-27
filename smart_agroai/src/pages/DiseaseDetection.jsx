@@ -20,10 +20,6 @@ const DiseaseDetection = () => {
     location: ""
   });
 
-  // Weather data state
-  const [weatherData, setWeatherData] = useState(null);
-  const [weatherLoading, setWeatherLoading] = useState(false);
-
   // Geolocation state
   const [locationLoading, setLocationLoading] = useState(false);
   const [locationError, setLocationError] = useState(null);
@@ -33,43 +29,10 @@ const DiseaseDetection = () => {
     getCurrentLocation();
   }, []);
 
-  // Fetch weather data when location changes
-  useEffect(() => {
-    if (agriculturalData.location) {
-      fetchWeatherData();
-    }
-  }, [agriculturalData.location]);
-
-  const fetchWeatherData = async () => {
-    if (!agriculturalData.location) return;
-    
-    setWeatherLoading(true);
-    try {
-      // Get coordinates from location (simplified)
-      const response = await api.post("/api/weather", { 
-        location: { 
-          lat: 20.5937, // Default India coordinates - in real app would geocode location
-          lon: 78.9629 
-        } 
-      });
-      
-      if (response.data.success && response.data.data) {
-        setWeatherData(response.data.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch weather data:", error);
-    } finally {
-      setWeatherLoading(false);
-    }
-  };
-
-  const getSeasonFromWeather = () => {
-    if (!weatherData?.current) return "Unknown";
-    
+  const getSeasonFromMonth = () => {
     const month = new Date().getMonth();
-    const temperature = weatherData.current.temperature || 25;
     
-    // Indian seasons based on month
+    // Indian seasons based on month only
     if (month >= 6 && month <= 9) return "Kharif (Monsoon)";
     if (month >= 10 && month <= 1) return "Rabi (Winter)";
     if (month >= 2 && month <= 5) return "Zaid (Summer)";
@@ -173,7 +136,7 @@ const DiseaseDetection = () => {
     
     // Immediate mock response for testing (bypass backend)
     console.log("🔄 Using immediate mock response for testing");
-    const currentSeason = getSeasonFromWeather();
+    const currentSeason = getSeasonFromMonth();
     const mockResult = {
       success: true,
       disease: "Tomato Early Blight",
@@ -208,17 +171,15 @@ const DiseaseDetection = () => {
         applicationMethod: "Soil drenching + foliar spray"
       },
       
-      // Auto-detected season info
+      // Month-based season info
       seasonInfo: {
         current: currentSeason,
-        weatherBased: true,
-        temperature: weatherData?.current?.temperature || 25,
-        humidity: weatherData?.current?.humidity || 60,
+        monthBased: true,
         recommendations: currentSeason.includes("Monsoon") ? "Increase fungicide frequency" : "Monitor humidity levels"
       },
       
       fallback: true,
-      note: "Comprehensive agricultural analysis with auto-detected season - backend deployment pending"
+      note: "Comprehensive agricultural analysis with month-based season detection - backend deployment pending"
     };
     
     setResult(mockResult);
@@ -394,22 +355,19 @@ const DiseaseDetection = () => {
               <label className="text-sm font-bold text-slate-700 ml-1 flex items-center gap-2">
                 <Leaf className="w-4 h-4 text-green-600" />
                 Growing Season
-                {weatherLoading && <Loader2 className="w-3 h-3 animate-spin text-blue-500" />}
               </label>
               <div className="bg-blue-50 border border-blue-100 rounded-2xl py-3 px-4">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-900 font-medium">
-                    {getSeasonFromWeather()}
+                    {getSeasonFromMonth()}
                   </span>
                   <span className="text-xs text-blue-600 font-medium">
                     Auto-detected
                   </span>
                 </div>
-                {weatherData?.current && (
-                  <div className="text-xs text-slate-500 mt-1">
-                    Based on current weather: {weatherData.current.temperature}°C, {weatherData.current.humidity}% humidity
-                  </div>
-                )}
+                <div className="text-xs text-slate-500 mt-1">
+                  Based on current month: {new Date().toLocaleDateString('en-US', { month: 'long' })}
+                </div>
               </div>
             </div>
           </div>
@@ -569,18 +527,10 @@ const DiseaseDetection = () => {
                       <Leaf className="w-4 h-4" />
                       Seasonal Analysis
                     </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       <div>
                         <p className="text-xs sm:text-sm text-slate-500 font-medium mb-1">Current Season</p>
                         <p className="text-sm sm:text-base font-bold text-slate-900">{result.seasonInfo.current}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm text-slate-500 font-medium mb-1">Temperature</p>
-                        <p className="text-sm sm:text-base font-bold text-slate-900">{result.seasonInfo.temperature}°C</p>
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm text-slate-500 font-medium mb-1">Humidity</p>
-                        <p className="text-sm sm:text-base font-bold text-slate-900">{result.seasonInfo.humidity}%</p>
                       </div>
                       <div>
                         <p className="text-xs sm:text-sm text-slate-500 font-medium mb-1">Seasonal Advice</p>
@@ -589,7 +539,7 @@ const DiseaseDetection = () => {
                     </div>
                     <div className="text-xs text-slate-500 mt-3 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3 text-green-500" />
-                      Season auto-detected from weather data
+                      Season auto-detected from current month
                     </div>
                   </div>
                 )}
