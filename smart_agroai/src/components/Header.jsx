@@ -1,9 +1,12 @@
 import React from "react";
 import { User, Menu, Sprout } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import LanguageToggle from "./LanguageToggle";
+import { useTranslation } from "react-i18next";
 
 const Header = ({ onMenuClick }) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <header className="h-20 lg:h-24 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 shadow-sm">
@@ -21,12 +24,17 @@ const Header = ({ onMenuClick }) => {
           <div className="bg-green-600 p-2 rounded-xl group-hover:rotate-12 transition-transform duration-300">
             <Sprout className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
           </div>
-          <span className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Agro<span className="text-green-600">Ai</span></span>
+          <span className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">
+            {t('landing.title')}
+          </span>
         </div>
       </div>
 
       {/* Right Section */}
       <div className="flex items-center gap-4 lg:gap-6">
+        {/* Language Toggle */}
+        <LanguageToggle />
+        
         {/* User Info */}
         <div className="flex items-center gap-3 lg:gap-4 pl-5 lg:pl-8 border-l border-slate-200">
           <div className="text-right hidden sm:block">

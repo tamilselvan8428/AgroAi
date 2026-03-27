@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Sprout, Mail, Lock, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 
 const LoginPage = () => {
@@ -12,6 +13,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +39,7 @@ const LoginPage = () => {
       } else if (err.code === 'ERR_NETWORK') {
         setError("Cannot connect to server. Please check your internet connection.");
       } else {
-        setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+        setError(err.response?.data?.message || t('login.loginFailed'));
       }
     } finally {
       setLoading(false);
@@ -58,8 +60,8 @@ const LoginPage = () => {
           <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-green-50 rounded-xl sm:rounded-2xl mb-4 sm:mb-6">
             <Sprout className="w-6 h-6 sm:w-8 sm:w-10 text-green-600" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
-          <p className="text-slate-500 mt-1 sm:mt-2 font-medium text-sm sm:text-base">Log in to manage your smart farm</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">{t('login.title')}</h1>
+          <p className="text-slate-500 mt-1 sm:mt-2 font-medium text-sm sm:text-base">{t('login.subtitle')}</p>
         </div>
 
         {error && (
@@ -71,7 +73,7 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+            <label className="text-sm font-bold text-slate-700 ml-1">{t('common.email')}</label>
             <div className="relative group">
               <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400 group-focus-within:text-green-600 transition-colors" />
               <input
@@ -79,14 +81,14 @@ const LoginPage = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="farmer@example.com"
+                placeholder={t('login.emailPlaceholder')}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl py-3 sm:py-4 pl-10 sm:pl-12 pr-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium text-sm sm:text-base"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 ml-1">Password</label>
+            <label className="text-sm font-bold text-slate-700 ml-1">{t('common.password')}</label>
             <div className="relative group">
               <Lock className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400 group-focus-within:text-green-600 transition-colors" />
               <input
@@ -94,7 +96,7 @@ const LoginPage = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder={t('login.passwordPlaceholder')}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl py-3 sm:py-4 pl-10 sm:pl-12 pr-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all text-slate-900 font-medium text-sm sm:text-base"
               />
             </div>
@@ -105,15 +107,15 @@ const LoginPage = () => {
             disabled={loading}
             className="w-full bg-slate-900 text-white rounded-xl sm:rounded-2xl py-3 sm:py-4 font-bold text-base sm:text-lg shadow-xl hover:bg-slate-800 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70"
           >
-            {loading ? <Loader2 className="w-4 h-4 sm:w-6 sm:h-6 animate-spin" /> : "Log In"}
+            {loading ? <Loader2 className="w-4 h-4 sm:w-6 sm:h-6 animate-spin" /> : t('login.loginButton')}
             {!loading && <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
           </button>
         </form>
 
         <div className="mt-10 text-center">
           <p className="text-slate-500 font-medium">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-green-600 font-bold hover:text-green-700 transition-colors">Sign Up</Link>
+            {t('login.noAccount')}{" "}
+            <Link to="/signup" className="text-green-600 font-bold hover:text-green-700 transition-colors">{t('login.signUpLink')}</Link>
           </p>
         </div>
       </motion.div>
