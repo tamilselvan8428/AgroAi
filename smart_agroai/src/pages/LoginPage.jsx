@@ -100,14 +100,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between px-1">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input type="checkbox" className="w-3 h-3 sm:w-4 sm:h-4 rounded border-slate-300 text-green-600 focus:ring-green-500" />
-              <span className="text-xs sm:text-sm text-slate-500 group-hover:text-slate-700 transition-colors font-medium">Remember me</span>
-            </label>
-            <a href="#" className="text-xs sm:text-sm font-bold text-green-600 hover:text-green-700 transition-colors">Forgot Password?</a>
-          </div>
-
           <button
             type="submit"
             disabled={loading}
