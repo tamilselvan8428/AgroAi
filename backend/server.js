@@ -7,6 +7,7 @@ import multer from "multer";
 import { connectDB } from "./config/database.js";
 import { config } from "./config/index.js";
 
+
 // Import routes
 import authRoutes from "./routes/auth.js";
 import chatRoutes from "./routes/chat.js";
