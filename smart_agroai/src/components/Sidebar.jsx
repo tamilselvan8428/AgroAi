@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <Leaf className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">
-                  AgroAI
+                  AgroDoctor
                 </span>
               </NavLink>
               <button
@@ -95,7 +95,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               <Leaf className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">
-              AgroAI
+              AgroDoctor
             </span>
           </NavLink>
         </div>

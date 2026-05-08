@@ -844,7 +844,7 @@ const LandingPage = () => {
 
           <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
 
-            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest">© 2026 AgroAi Ecosystem</p>
+            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest">© 2026 AgriDoctor Ecosystem</p>
 
             <div className="flex gap-8">
 
