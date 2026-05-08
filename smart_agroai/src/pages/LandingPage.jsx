@@ -200,7 +200,7 @@ const LandingPage = () => {
 
             </div>
 
-            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">Agro<span className="text-green-600">Ai</span></span>
+            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">AgroDoctor</span>
 
           </motion.div>
 
